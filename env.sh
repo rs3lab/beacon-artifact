@@ -20,6 +20,7 @@ sudo apt-get install -y dotnet-sdk-8.0
 sudo apt-get install -y libcap-dev
 sudo apt-get install -y libelf-dev
 sudo apt-get install -y libzstd-dev
+sudo apt-get install -y qemu-system-x86
 
 # install libbpf: https://github.com/libbpf/libbpf
 git clone https://github.com/libbpf/libbpf

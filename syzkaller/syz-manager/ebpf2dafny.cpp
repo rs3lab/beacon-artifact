@@ -679,7 +679,7 @@ std::string execute_cmd(std::string final_dafny, uint64_t *duration) {
 	auto start = std::chrono::high_resolution_clock::now();
 
     // FILE* pipe = popen("/home/tlyu/ebpf-fuzzing/dafny-ebpf/dafny/dafny verify --cores 50 /tmp/ebpf.dfy", "r");
-	std::string cmd = "/usr/bin/dotne ./dafny-tool/Dafny.dll \
+	std::string cmd = "/usr/bin/dotnet ./dafny-tool/Dafny.dll \
 						verify --verification-time-limit 300 --cores 3 " + fn_name;
 	FILE* pipe = popen(cmd.c_str(), "r");
     if (!pipe) {
