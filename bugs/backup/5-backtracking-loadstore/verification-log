@@ -1,0 +1,97 @@
+root@syzkaller:~# ./prog 
+buf:
+func#0 @0
+func#1 @207
+0: R1=ctx(off=0,imm=0) R10=fp0
+0: (7b) *(u64 *)(r10 -448) = r1       ; R1=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+1: (bf) r2 = r1                       ; R1=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+2: (bf) r3 = r10                      ; R3_w=fp0 R10=fp0
+3: (07) r3 += -20                     ; R3_w=fp-20
+4: (62) *(u32 *)(r10 -20) = 1371797254        ; R10=fp0 fp-24=mmmm????
+5: (85) call pc+201
+caller:
+ R10=fp0 fp-24=mmmm???? fp-448_w=ctx
+callee:
+ frame1: R1=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0) R3_w=fp-20 R10=fp0
+207: frame1:
+207: (b7) r7 = -324946473             ; frame1: R7_w=-324946473
+208: (bf) r4 = r7                     ; frame1: R4_w=-324946473 R7_w=-324946473
+209: (97) r4 %= 794237411             ; frame1: R4_w=scalar()
+210: (bc) w0 = w4                     ; frame1: R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R4_w=scalar()
+211: (84) w0 = -w0                    ; frame1: R0_w=scalar()
+212: (bc) w5 = w4                     ; frame1: R4_w=scalar() R5_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+213: (84) w5 = -w5                    ; frame1: R5_w=scalar()
+214: (14) w7 -= -1821081451           ; frame1: R7_w=1496134978
+215: (dc) r5 = be32 r5                ; frame1: R5_w=scalar()
+216: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+217: (54) w0 &= -1227629879           ; frame1: R0_w=scalar(umax=3067337417,var_off=(0x0; 0xb6d3dac9),s32_max=919853769)
+218: (87) r0 = -r0                    ; frame1: R0_w=scalar()
+219: (dc) r0 = be64 r0                ; frame1: R0_w=scalar()
+220: (bc) w2 = w7                     ; frame1: R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R7_w=scalar()
+221: (d4) r2 = le32 r2                ; frame1: R2_w=scalar()
+222: (dc) r0 = be32 r0                ; frame1: R0_w=scalar()
+223: (bf) r9 = r4                     ; frame1: R4_w=scalar(id=1) R9_w=scalar(id=1)
+224: (87) r9 = -r9                    ; frame1: R9_w=scalar()
+225: (84) w2 = -w2                    ; frame1: R2_w=scalar()
+226: (d4) r5 = le16 r5                ; frame1: R5_w=scalar()
+227: (dc) r2 = be64 r2                ; frame1: R2_w=scalar()
+228: (07) r4 += -1477533223           ; frame1: R4_w=scalar()
+229: (bf) r7 = r10                    ; frame1: R7_w=fp0 R10=fp0
+230: (dc) r4 = be32 r4                ; frame1: R4_w=scalar()
+231: (dc) r0 = be32 r0                ; frame1: R0_w=scalar()
+232: (af) r4 ^= r0                    ; frame1: R0_w=scalar() R4_w=scalar()
+233: (1f) r2 -= r0                    ; frame1: R0_w=scalar() R2_w=scalar()
+234: (bf) r6 = r1                     ; frame1: R1=ctx(off=0,imm=0) R6_w=ctx(off=0,imm=0)
+235: (bf) r6 = r0                     ; frame1: R0_w=scalar(id=2) R6_w=scalar(id=2)
+236: (47) r6 |= -429555999            ; frame1: R6_w=scalar(umin=18446744073279995617,var_off=(0xffffffffe6657ee1; 0x199a811e),u32_min=-429555999)
+237: (bf) r0 = r7                     ; frame1: R0_w=fp0 R7_w=fp0
+238: (72) *(u8 *)(r0 -293) = -473977409       ; frame1: R0_w=fp0 fp-296=????m???
+239: (c3) r7 = atomic_fetch_or((u32 *)(r0 -120), r7)          ; frame1: R0_w=fp0 R7_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) fp-120=????mmmm
+240: (94) w5 %= -2099536659           ; frame1: R5_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+241: (57) r5 &= -21848111             ; frame1: R5_w=scalar(umax=4273119185,var_off=(0x0; 0xfeb29fd1),s32_max=2125635537)
+242: (87) r6 = -r6                    ; frame1: R6_w=scalar()
+243: (c3) lock *(u32 *)(r0 -264) ^= r0        ; frame1: R0_w=fp0 fp-264=????mmmm
+244: (87) r5 = -r5                    ; frame1: R5_w=scalar()
+245: (4c) w7 |= w0
+mark_precise: frame1: last_idx 245 first_idx 0 subseq_idx -1 
+mark_precise: frame1: regs=r7 stack= before 244: (87) r5 = -r5
+mark_precise: frame1: regs=r7 stack= before 243: (c3) lock *(u32 *)(r0 -264) ^= r0
+mark_precise: frame1: regs=r7 stack= before 242: (87) r6 = -r6
+mark_precise: frame1: regs=r7 stack= before 241: (57) r5 &= -21848111
+mark_precise: frame1: regs=r7 stack= before 240: (94) w5 %= -2099536659
+mark_precise: frame1: regs=r7 stack= before 239: (c3) r7 = atomic_fetch_or((u32 *)(r0 -120), r7)
+mark_precise: frame1: regs=r7 stack= before 238: (72) *(u8 *)(r0 -293) = -473977409
+mark_precise: frame1: regs=r7 stack= before 237: (bf) r0 = r7
+mark_precise: frame1: regs=r7 stack= before 236: (47) r6 |= -429555999
+mark_precise: frame1: regs=r7 stack= before 235: (bf) r6 = r0
+mark_precise: frame1: regs=r7 stack= before 234: (bf) r6 = r1
+mark_precise: frame1: regs=r7 stack= before 233: (1f) r2 -= r0
+mark_precise: frame1: regs=r7 stack= before 232: (af) r4 ^= r0
+mark_precise: frame1: regs=r7 stack= before 231: (dc) r0 = be32 r0
+mark_precise: frame1: regs=r7 stack= before 230: (dc) r4 = be32 r4
+mark_precise: frame1: regs=r7 stack= before 229: (bf) r7 = r10
+mark_precise: frame1: regs=r10 stack= before 228: (07) r4 += -1477533223
+mark_precise: frame1: regs=r10 stack= before 227: (dc) r2 = be64 r2
+mark_precise: frame1: regs=r10 stack= before 226: (d4) r5 = le16 r5
+mark_precise: frame1: regs=r10 stack= before 225: (84) w2 = -w2
+mark_precise: frame1: regs=r10 stack= before 224: (87) r9 = -r9
+mark_precise: frame1: regs=r10 stack= before 223: (bf) r9 = r4
+mark_precise: frame1: regs=r10 stack= before 222: (dc) r0 = be32 r0
+mark_precise: frame1: regs=r10 stack= before 221: (d4) r2 = le32 r2
+mark_precise: frame1: regs=r10 stack= before 220: (bc) w2 = w7
+mark_precise: frame1: regs=r10 stack= before 219: (dc) r0 = be64 r0
+mark_precise: frame1: regs=r10 stack= before 218: (87) r0 = -r0
+mark_precise: frame1: regs=r10 stack= before 217: (54) w0 &= -1227629879
+mark_precise: frame1: regs=r10 stack= before 216: (84) w7 = -w7
+mark_precise: frame1: regs=r10 stack= before 215: (dc) r5 = be32 r5
+mark_precise: frame1: regs=r10 stack= before 214: (14) w7 -= -1821081451
+mark_precise: frame1: regs=r10 stack= before 213: (84) w5 = -w5
+mark_precise: frame1: regs=r10 stack= before 212: (bc) w5 = w4
+mark_precise: frame1: regs=r10 stack= before 211: (84) w0 = -w0
+mark_precise: frame1: regs=r10 stack= before 210: (bc) w0 = w4
+mark_precise: frame1: regs=r10 stack= before 209: (97) r4 %= 794237411
+mark_precise: frame1: regs=r10 stack= before 208: (bf) r4 = r7
+mark_precise: frame1: regs=r10 stack= before 207: (b7) r7 = -324946473
+mark_precise: frame1: regs=r10 stack= before 5: (85) call pc+201
+BUG regs 400
+processed 45 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0

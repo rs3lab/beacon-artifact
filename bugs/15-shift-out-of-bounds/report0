@@ -1,0 +1,73 @@
+------------[ cut here ]------------
+UBSAN: shift-out-of-bounds in ./include/linux/bpf_verifier.h:894:37
+shift exponent 86 is too large for 64-bit type 'long long unsigned int'
+CPU: 0 PID: 3861 Comm: syz-executor.0 Not tainted 6.8.0+ #4
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xc1/0xf0 lib/dump_stack.c:106
+ ubsan_epilogue+0xa/0x40 lib/ubsan.c:217
+ __ubsan_handle_shift_out_of_bounds+0x1e9/0x2b0 lib/ubsan.c:454
+ mark_stack_slot_scratched include/linux/bpf_verifier.h:894 [inline]
+ check_stack_read_fixed_off kernel/bpf/verifier.c:4794 [inline]
+ check_stack_read kernel/bpf/verifier.c:5000 [inline]
+ check_mem_access.cold+0x1c/0xbe kernel/bpf/verifier.c:6875
+ check_atomic kernel/bpf/verifier.c:7051 [inline]
+ do_check kernel/bpf/verifier.c:17703 [inline]
+ do_check_common+0x9296/0xbd90 kernel/bpf/verifier.c:20499
+ do_check_main kernel/bpf/verifier.c:20590 [inline]
+ bpf_check+0x9205/0xdaa0 kernel/bpf/verifier.c:21260
+ bpf_prog_load+0x1640/0x2690 kernel/bpf/syscall.c:2895
+ __sys_bpf+0x120b/0x65e0 kernel/bpf/syscall.c:5631
+ __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
+ __x64_sys_bpf+0x7e/0xc0 kernel/bpf/syscall.c:5736
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x65/0x140 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x6c/0x74
+RIP: 0033:0x7f3d9da75ccd
+Code: c3 e8 77 32 00 00 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3d9cde3b18 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007f3d9dbb3ef0 RCX: 00007f3d9da75ccd
+RDX: 0000000000000090 RSI: 00000000201eb500 RDI: 0000000000000005
+RBP: 00007f3d9db29df8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000201eb500
+R13: 00007f3d9db29df8 R14: 00007fff13cee090 R15: 00007f3d9cde3d80
+ </TASK>
+---[ end trace ]---
+------------[ cut here ]------------
+UBSAN: shift-out-of-bounds in ./include/linux/bpf_verifier.h:904:37
+shift exponent 64 is too large for 64-bit type 'long long unsigned int'
+CPU: 0 PID: 3861 Comm: syz-executor.0 Not tainted 6.8.0+ #4
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xc1/0xf0 lib/dump_stack.c:106
+ ubsan_epilogue+0xa/0x40 lib/ubsan.c:217
+ __ubsan_handle_shift_out_of_bounds+0x1e9/0x2b0 lib/ubsan.c:454
+ stack_slot_scratched include/linux/bpf_verifier.h:904 [inline]
+ print_verifier_state.cold+0x30/0x6e kernel/bpf/log.c:781
+ do_check kernel/bpf/verifier.c:17646 [inline]
+ do_check_common+0xece/0xbd90 kernel/bpf/verifier.c:20499
+ do_check_main kernel/bpf/verifier.c:20590 [inline]
+ bpf_check+0x9205/0xdaa0 kernel/bpf/verifier.c:21260
+ bpf_prog_load+0x1640/0x2690 kernel/bpf/syscall.c:2895
+ __sys_bpf+0x120b/0x65e0 kernel/bpf/syscall.c:5631
+ __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
+ __x64_sys_bpf+0x7e/0xc0 kernel/bpf/syscall.c:5736
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x65/0x140 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x6c/0x74
+RIP: 0033:0x7f3d9da75ccd
+Code: c3 e8 77 32 00 00 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f3d9cde3b18 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007f3d9dbb3ef0 RCX: 00007f3d9da75ccd
+RDX: 0000000000000090 RSI: 00000000201eb500 RDI: 0000000000000005
+RBP: 00007f3d9db29df8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000201eb500
+R13: 00007f3d9db29df8 R14: 00007fff13cee090 R15: 00007f3d9cde3d80
+ </TASK>
+---[ end trace ]---

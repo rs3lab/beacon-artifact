@@ -1,0 +1,30 @@
+From b8b896604ef0bf07f97ff1aca3aaeba22b1301c5 Mon Sep 17 00:00:00 2001
+From: Tao Lyu <tao.lyu@epfl.ch>
+Date: Sun, 17 Nov 2024 21:36:08 +0000
+Subject: [PATCH 0/2] Check the types of iter arguments
+
+The verifier misses the type checking on iter arguments,
+so any pointer types (e.g., map value pointers) can be
+passed as iter arguments.
+
+As the included selftest shows, when passing a ptr_to_map_value
+with offset 0, process_iter_arg still regards it as a stack pointer
+and uses offset 0 to check the stack slot types.
+
+In this case, as long as the stack slot types at offset 0 are STACK_ITER,
+verifier checks can be passed before the fix.
+
+To fix this issue, we add a type check in process_iter_arg to ensure
+the passed iter arguments are in the type of PTR_TO_STACK.
+
+Tao Lyu (2):
+  bpf: Check if iter args are stack pointers
+  selftests/bpf: Add a test for the type checking of iter args
+
+ kernel/bpf/verifier.c                     |  8 +++++++-
+ tools/testing/selftests/bpf/progs/iters.c | 20 ++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 1 deletion(-)
+
+-- 
+2.34.1
+

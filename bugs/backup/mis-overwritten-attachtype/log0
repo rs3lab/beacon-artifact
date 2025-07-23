@@ -1,0 +1,136 @@
+pre-print START
+(18) r8 = 0x5
+BUG_ld_00
+(18) r3 = 0xffffffffe7c50507
+BUG_ld_00
+(18) r5 = 0x0
+BUG_ld_00
+(63) *(u32 *)(r1 +20) = r10
+(b4) w2 = -1857302105
+(6b) *(u16 *)(r10 -328) = r5
+(b4) w7 = -968988195
+(18) r7 = 0x2b9a693f
+BUG_ld_00
+(b7) r8 = 855420579
+(34) w7 s/= 64
+(69) r4 = *(u16 *)(r10 -498)
+(a5) if r7 < 0x2b0c478b goto pc+17
+(b4) w4 = -108726515
+(c3) r10 = atomic_fetch_or((u32 *)(r8 +0), r10)
+(18) r0 = 0x5
+BUG_ld_00
+(63) *(u32 *)(r1 +266) = r10
+(bc) w5 = w7
+(b7) r4 = 1075520211
+(b4) w2 = -1472933551
+(61) r8 = *(u32 *)(r1 +70)
+(18) r0 = 0x7
+BUG_ld_00
+(63) *(u32 *)(r10 -168) = r1
+(34) w5 /= 32
+(87) r2 = -r2
+(bf) r8 = r4
+(18) r3 = 0x12d1b9d1
+BUG_ld_00
+(18) r0 = 0x1ec7946d
+BUG_ld_00
+(63) *(u32 *)(r10 -272) = r2
+(18) r5 = 0xffffffffed5d2063
+BUG_ld_00
+(72) *(u8 *)(r10 -199) = 1621315237
+(b7) r5 = 1591704569
+(94) w5 s%= 16
+(95) exit
+pre-print END
+func#0 @0
+0: R1=ctx() R10=fp0
+0: (18) r8 = 0xff1100039c77e200       ; R8_w=map_ptr(ks=0,vs=0)
+2: (18) r3 = 0xffffffffe7c50507       ; R3_w=0xffffffffe7c50507
+4: (18) r5 = 0xff1100039c77e000
+sample state 2: 6, rec_block: 3
+6: R5_w=map_ptr(ks=0,vs=0)
+6: (63) *(u32 *)(r1 +20) = r10        ; R1=ctx() R10=fp0
+7: (b4) w2 = -1857302105              ; R2_w=0x914bd1a7
+8: (6b) *(u16 *)(r10 -328) = r5
+invalid size of register spill
+sample state 1: 8
+processed 6 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+
+Insns debug:
+18180000010000000000000000000000
+include "spec.dfy"
+method testMain() {
+	var s := new State(
+		// allow_ptr_leak_set:bool, bypass_spec_v1_set:bool, priv_set:bool, has_net_admin:bool
+		true, true, true, true, 
+		false);
+	s.progType := BPF_PROG_TYPE_CGROUP_SOCK;
+	s.attachType := BPF_CGROUP_INET_INGRESS;
+
+	assume {:axiom} s.maps.Length == 5;
+	s.CreateMap(0, BPF_MAP_TYPE_RINGBUF, 0, 0, 524288, 0, 0);
+
+// 0:false 1:true 2:false 3:false 4:false 5:true 6:false 7:false 8:false 9:false 10:true 
+	s.spin_lock_meta.isLocked := false;
+	s.r1.regType := CTXMEM;
+	s.r1.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r1.regVal == 0;
+	s.r1.regVal := s.r1.regVal + 0;
+	s.r1.memId := 0;
+	s.r5.regType := MAP_PTR;
+	assume {:axiom} (!0) & s.r5.regVal == 0;
+	s.r5.regVal := s.r5.regVal + 0;
+	s.r5.memId := 0;
+	s.r5.mapFd := 0;
+	s.r10.regType := STACKMEM;
+	s.r10.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r10.regVal == 0;
+	s.r10.regVal := s.r10.regVal + 0;
+	s.r10.memId := 0;
+	 // stack slots 0 : 0
+	var immReg := new RegState(Rn);
+	var anybv8 := AnyBv8();
+	if s.r1.regType == PTR_TO_ARENA { s.Store_ARENA(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_TP_BUFFER { s.Store_TPBUFFER(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_SOCK_COMMON { s.Store_SOCK(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_TCP_SOCK { s.Store_SOCK(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_PACKET_END { s.Store_PACKET(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_PACKET { s.Store_PACKET(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_SOCKET { s.Store_SOCK(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_PACKET_META { s.Store_PACKET(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_MAP_KEY { s.Store_MAPKEY(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_MAP_VALUE { s.Store_MAPVALUE(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_XDP_SOCK { s.Store_SOCK(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == MAP_PTR { s.Store_MAPMEM(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == PTR_TO_FLOW_KEYS { s.Store_FLOWKEYS(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == CTXMEM { s.Store_CTXMEM(s.r1, s.r10, 20, 4); // Instruction 6
+	} else if s.r1.regType == STACKMEM { s.Store_STACKMEM(s.r1, s.r10, 20, 4); // Instruction 6
+	} else { assert false; } // Instruction 6
+	s.Mov32_IMM(s.r2, -1857302105); // Instruction 7
+s.Store_STACKMEM(s.r10, s.r5, -328, 2); // Instruction 8
+// size of stack_branches: 0
+	
+
+}
+/tmp/ebpf99761.dfy(46,36): Error: a precondition for this call could not be proved
+   |
+46 | 	} else if s.r1.regType == CTXMEM { s.Store_CTXMEM(s.r1, s.r10, 20, 4); // Instruction 6
+   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/spec.dfy(1452,17): Related location: this is the precondition that could not be proved
+     |
+1452 |         requires context_access_safe(this.progType, (bv64ToInt64(dst.regVal) + off), size, WRITE, this.attachType, this.priv)
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/ctxmem-precond.dfy(18,63): Related location: this proposition could not be proved
+   |
+18 |             case BPF_PROG_TYPE_CGROUP_SOCK                  => sock_filter_CTX(off1, size1, acct, attachType, priv)
+   |                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/ctxmem-precond.dfy(529,8): Related location: this proposition could not be proved
+    |
+529 |         (exact_4_read(off, size, 0, acct) && (
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 0 verified, 1 error

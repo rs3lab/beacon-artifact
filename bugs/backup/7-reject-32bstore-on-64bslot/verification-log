@@ -1,0 +1,6 @@
+0: R1=ctx() R10=fp0
+; asm volatile ( @ repro.bpf.c:679
+0: (7a) *(u64 *)(r10 -8) = 1          ; R10=fp0 fp-8_w=1
+1: (62) *(u32 *)(r10 -8) = 1
+attempt to corrupt spilled pointer on stack
+processed 2 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0.

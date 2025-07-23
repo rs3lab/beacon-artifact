@@ -1,0 +1,2 @@
+1. Why need to prohibit other arithmetic ops except sub on pointers:
+https://github.com/torvalds/linux/commit/82abbf8d2fc46d79611ab58daa7c608df14bb3ee

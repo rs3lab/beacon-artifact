@@ -1,0 +1,1580 @@
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+------------[ cut here ]------------
+verifier backtracking bug
+WARNING: CPU: 1 PID: 37670 at kernel/bpf/verifier.c:3543 backtrack_insn kernel/bpf/verifier.c:3543 [inline]
+WARNING: CPU: 1 PID: 37670 at kernel/bpf/verifier.c:3543 __mark_chain_precision+0x4568/0x4e50 kernel/bpf/verifier.c:4072
+Modules linked in:
+CPU: 1 PID: 37670 Comm: syz-executor.0 Not tainted 6.5.0-rc4+ #30
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+RIP: 0010:backtrack_insn kernel/bpf/verifier.c:3543 [inline]
+RIP: 0010:__mark_chain_precision+0x4568/0x4e50 kernel/bpf/verifier.c:4072
+Code: 01 31 ff 89 de e8 28 65 e7 ff 84 db 0f 85 96 c6 ff ff e8 4b 63 e7 ff 48 c7 c7 e0 6e cd 87 c6 05 b3 da 01 05 01 e8 58 38 bb ff <0f> 0b 41 bc f2 ff ff ff e9 7c c6 ff ff 4c 89 ee 48 c7 c7 80 51 15
+RSP: 0018:ff110000021670c8 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000027
+RDX: 0000000000000027 RSI: 0000000000000004 RDI: ff1100006cf285c8
+RBP: 0000000000000004 R08: 0000000000000000 R09: ffe21c000d9e50ba
+R10: ffe21c000d9e50b9 R11: ff1100006cf285cb R12: 0000000000000005
+R13: 0000000000000001 R14: dffffc0000000000 R15: ff11000004678000
+FS:  00007f19ffc5a700(0000) GS:ff1100006cf00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000200f5000 CR3: 0000000005f70005 CR4: 0000000000771ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ mark_chain_precision kernel/bpf/verifier.c:4187 [inline]
+ check_stack_write_fixed_off+0x108d/0x16e0 kernel/bpf/verifier.c:4405
+ check_stack_write kernel/bpf/verifier.c:4825 [inline]
+ check_mem_access+0xa77/0x50d0 kernel/bpf/verifier.c:6598
+ do_check kernel/bpf/verifier.c:16629 [inline]
+ do_check_common+0x323d/0xb0c0 kernel/bpf/verifier.c:19185
+ do_check_main kernel/bpf/verifier.c:19248 [inline]
+ bpf_check+0x9ad1/0xd560 kernel/bpf/verifier.c:19872
+ bpf_prog_load+0x17a9/0x21a0 kernel/bpf/syscall.c:2714
+ __sys_bpf+0x13a6/0x66e0 kernel/bpf/syscall.c:5350
+ __do_sys_bpf kernel/bpf/syscall.c:5454 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5452 [inline]
+ __x64_sys_bpf+0x7e/0xc0 kernel/bpf/syscall.c:5452
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x3c/0x90 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+RIP: 0033:0x7f1a008eac9d
+Code: c3 e8 17 32 00 00 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f19ffc59b28 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007f1a00a29ef0 RCX: 00007f1a008eac9d
+RDX: 0000000000000080 RSI: 00000000201e8dc0 RDI: 0000000000000005
+RBP: 00007f1a0099ddf8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000201e8dc0
+R13: 00007f1a0099ddf8 R14: 00007ffd44f80200 R15: 00007f19ffc59d80
+ </TASK>
+---[ end trace 0000000000000000 ]---
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-156, max_off:-153, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-12, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-156, max_off:-153, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-12, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-362, max_off:-361, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-132, max_off:-129, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-132, max_off:-132, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-460, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-116, max_off:-113, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-44, max_off:-41, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-44, max_off:-42, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-144, max_off:-141, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-272, max_off:-272, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-296, max_off:-293, -MAX_BPF_STACK:-512, -state->allocated_stack:-272
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-208, max_off:-201, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-272, max_off:-272, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-296, max_off:-293, -MAX_BPF_STACK:-512, -state->allocated_stack:-272
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-416, max_off:-415, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-450, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-116, max_off:-113, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-133, max_off:-133, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-468, max_off:-468, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-235, max_off:-235, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-180, max_off:-177, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-28, max_off:-25, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-420, max_off:-419, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-160, max_off:-157, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-84, max_off:-83, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-182, max_off:-181, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-40, max_off:-33, -MAX_BPF_STACK:-512, -state->allocated_stack:-184
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-484, max_off:-484, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-204, max_off:-203, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+called is_state_visited
+min_off:-488, max_off:-487, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-192, max_off:-189, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-488, max_off:-481, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-72, max_off:-69, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-362, max_off:-361, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-67, max_off:-67, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+called is_state_visited
+min_off:-488, max_off:-487, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-192, max_off:-189, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-488, max_off:-481, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+called is_state_visited
+min_off:-488, max_off:-487, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-192, max_off:-189, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-488, max_off:-481, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-348, max_off:-345, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+called is_state_visited
+min_off:-408, max_off:-405, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-256, max_off:-249, -MAX_BPF_STACK:-512, -state->allocated_stack:-408
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-384, max_off:-377, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-440, max_off:-439, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+called is_state_visited
+min_off:-182, max_off:-181, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-40, max_off:-33, -MAX_BPF_STACK:-512, -state->allocated_stack:-184
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-222, max_off:-221, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-202, max_off:-201, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-92, max_off:-89, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-76, max_off:-73, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+called is_state_visited
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-420, max_off:-419, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-24, max_off:-21, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-198, max_off:-198, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-272, max_off:-265, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-52, max_off:-49, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-196, max_off:-193, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-396, max_off:-396, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-8, max_off:-5, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-8, max_off:-7, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-196, max_off:-189, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-165, max_off:-165, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-208, max_off:-205, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-248, max_off:-241, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-120, max_off:-113, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-176, max_off:-169, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-504, max_off:-501, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-53, max_off:-53, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-330, max_off:-330, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-208, max_off:-205, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-248, max_off:-241, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-120, max_off:-113, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-52, max_off:-49, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-48, max_off:-45, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-12, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-504
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-384, max_off:-381, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-247, max_off:-247, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-17, max_off:-17, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-94, max_off:-93, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-320, max_off:-319, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-102, max_off:-101, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-344, max_off:-341, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-416, max_off:-413, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-151, max_off:-151, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-400, max_off:-400, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-48, max_off:-41, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-88, max_off:-85, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-180, max_off:-177, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-88, max_off:-86, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-180, max_off:-178, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-400, max_off:-400, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-48, max_off:-41, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-460, max_off:-460, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-32, max_off:-25, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-260, max_off:-260, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-182, max_off:-181, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-128, max_off:-125, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-128, max_off:-126, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-216, max_off:-215, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-224, max_off:-217, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-69, max_off:-69, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-392, max_off:-385, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-256, max_off:-249, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-128, max_off:-125, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-128, max_off:-126, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-216, max_off:-215, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-224, max_off:-217, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-69, max_off:-69, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-10, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-16, max_off:-13, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-104, max_off:-101, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-140, max_off:-137, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-140, max_off:-139, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-16, max_off:-16, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_valid_off:-512, off:33554414
+min_off:-16, max_off:33554414, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-104, max_off:-101, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-72, max_off:-69, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-104, max_off:-101, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-72, max_off:-72, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-108, max_off:-108, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-298, max_off:-297, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-440, max_off:-433, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-180, max_off:-177, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-56, max_off:-53, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-176, max_off:-173, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-96, max_off:-93, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-422, max_off:-421, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-46, max_off:-45, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-120, max_off:-119, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-400, max_off:-397, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-440, max_off:-433, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-466, max_off:-466, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-8, max_off:-5, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-18, max_off:-18, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-24
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-171, max_off:-171, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-334, max_off:-333, -MAX_BPF_STACK:-512, -state->allocated_stack:-176
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-116, max_off:-113, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-60, max_off:-57, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-28, max_off:-28, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-370, max_off:-369, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-370, max_off:-369, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-452, max_off:-452, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+called is_state_visited
+min_off:-95, max_off:-95, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-479, max_off:-479, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-95, max_off:-95, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-95, max_off:-95, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-429, max_off:-429, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-116, max_off:-113, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-364, max_off:-361, -MAX_BPF_STACK:-512, -state->allocated_stack:-120
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-116, max_off:-113, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-364, max_off:-361, -MAX_BPF_STACK:-512, -state->allocated_stack:-120
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-56, max_off:-49, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-76, max_off:-73, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-129, max_off:-129, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-220, max_off:-219, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-276, max_off:-275, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-156, max_off:-156, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-116, max_off:-113, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-116, max_off:-116, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-208, max_off:-201, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-56, max_off:-53, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-56, max_off:-56, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-208, max_off:-201, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-132, max_off:-129, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-397, max_off:-397, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-474, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-240, max_off:-237, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-84, max_off:-81, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-160, max_off:-157, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-412, max_off:-409, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-196, max_off:-193, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-444, max_off:-443, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-357, max_off:-357, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-68, max_off:-65, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+min_off:-376, max_off:-375, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-121, max_off:-121, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-128
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-160, max_off:-153, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-40, max_off:-33, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-160, max_off:-153, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-40, max_off:-33, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-216, max_off:-209, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-160, max_off:-153, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-40, max_off:-33, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-388, max_off:-385, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-160, max_off:-153, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-40, max_off:-33, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-88, max_off:-81, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-423, max_off:-423, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-392, max_off:-385, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-14, max_off:-13, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-2, max_off:-1, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-160, max_off:-153, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-40, max_off:-33, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-72, max_off:-69, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-108, max_off:-105, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-368, max_off:-368, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-10, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-344, max_off:-337, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-368, max_off:-368, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-10, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-344, max_off:-337, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-6, max_off:-6, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-368, max_off:-368, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-10, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-344, max_off:-337, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-400, max_off:-393, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-368, max_off:-368, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-10, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-344, max_off:-337, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-256, max_off:-253, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-104, max_off:-101, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-368, max_off:-368, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-10, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-344, max_off:-337, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-262, max_off:-261, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-352, max_off:-349, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-12, max_off:-9, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-140, max_off:-137, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-87, max_off:-87, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-296, max_off:-293, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-184, max_off:-181, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-256, max_off:-256, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-52, max_off:-49, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-112, max_off:-109, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-112, max_off:-109, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-329, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-214, max_off:-213, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-312, max_off:-305, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-112, max_off:-109, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-112, max_off:-109, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-329, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-214, max_off:-213, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-32, max_off:-29, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-355, max_off:-355, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-360
+min_off:-188, max_off:-185, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-192, max_off:-189, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-468, max_off:-467, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-54, max_off:-53, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-268, max_off:-265, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-184, max_off:-181, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-184, max_off:-181, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-352, max_off:-345, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-152, max_off:-149, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-192, max_off:-189, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-468, max_off:-467, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-54, max_off:-53, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-48, max_off:-45, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-28, max_off:-25, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-192, max_off:-189, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-468, max_off:-467, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-54, max_off:-53, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-48, max_off:-45, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-48, max_off:-45, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-428, max_off:-428, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+called is_state_visited
+min_off:-184, max_off:-177, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-172, max_off:-169, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-60, max_off:-57, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-172, max_off:-170, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-60, max_off:-60, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_valid_off:-512, off:1986
+min_off:-60, max_off:1986, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-30, max_off:-30, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-260, max_off:-257, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-439, max_off:-439, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-464
+called is_state_visited
+called is_state_visited
+min_off:-66, max_off:-65, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-506, max_off:-505, -MAX_BPF_STACK:-512, -state->allocated_stack:-72
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-484, max_off:-481, -MAX_BPF_STACK:-512, -state->allocated_stack:-480
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-464, max_off:-457, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-480, max_off:-473, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-188, max_off:-185, -MAX_BPF_STACK:-512, -state->allocated_stack:-488
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-332, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-332, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-332, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-332, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-332, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-332, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-332, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+called is_state_visited
+called is_state_visited
+called is_state_visited
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:0
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-332, max_off:-329, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-448
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-456
+min_off:-448, max_off:-441, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-456, max_off:-449, -MAX_BPF_STACK:-512, -state->allocated_stack:-472
+min_off:-472, max_off:-465, -MAX_BPF_STACK:-512, -state->allocated_stack:-472

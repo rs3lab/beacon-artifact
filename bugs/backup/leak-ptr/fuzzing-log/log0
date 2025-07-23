@@ -1,0 +1,133 @@
+pre-print START
+(b7) r6 = 1115645561
+(bc) w4 = w6
+(84) w4 = -w4
+(62) *(u32 *)(r10 -464) = 1485489387
+(b4) w8 = 1692447773
+(b7) r8 = -1323785719
+(b7) r0 = 1560009199
+(bf) r5 = r6
+(34) w5 s/= 16
+(bc) w9 = (s8)w0
+(b7) r2 = -1314164539
+(79) r9 = *(u64 *)(r10 -464)
+(6a) *(u16 *)(r10 -428) = 284710901
+(71) r2 = *(u8 *)(r1 +383)
+(81) r6 = *(s32 *)(r1 +440)
+(bc) w0 = (s8)w5
+(84) w9 = -w9
+(b7) r5 = 468942677
+(bf) r3 = (s16)r5
+(b7) r4 = 43
+(95) exit
+pre-print END
+func#0 @0
+0: R1=ctx() R10=fp0
+0: (b7) r6 = 1115645561               ; R6_w=0x427f6679
+1: (bc) w4 = w6                       ; R4_w=0x427f6679 R6_w=0x427f6679
+2: (84) w4 = -w4                      ; R4_w=scalar()
+3: (62) *(u32 *)(r10 -464) = 1485489387       ; R10=fp0 fp-464=mmmm0x588ac4eb
+4: (b4) w8 = 1692447773               ; R8_w=0x64e0b41d
+5: (b7) r8 = -1323785719              ; R8_w=0xffffffffb118a209
+6: (b7) r0 = 1560009199               ; R0_w=0x5cfbd9ef
+7: (bf) r5 = r6                       ; R5_w=0x427f6679 R6_w=0x427f6679
+8: (34) w5 s/= 16                     ; R5_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+9: (bc) w9 = (s8)w0                   ; R0_w=0x5cfbd9ef R9_w=0xffffffef
+10: (b7) r2 = -1314164539             ; R2_w=0xffffffffb1ab70c5
+11: (79) r9 = *(u64 *)(r10 -464)      ; R9_w=scalar() R10=fp0 fp-464=mmmm0x588ac4eb
+12: (6a) *(u16 *)(r10 -428) = 284710901       ; R10=fp0 fp-432=??mm????
+13: (71) r2 = *(u8 *)(r1 +383)        ; R1=ctx() R2_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=255,var_off=(0x0; 0xff))
+14: (81) r6 = *(s32 *)(r1 +440)       ; R1=ctx() R6_w=scalar(smin=0xffffffff80000000,smax=0x7fffffff)
+15: (bc) w0 = (s8)w5                  ; R0_w=scalar(smin=0,smax=umax=0xffffffff,smin32=-128,smax32=127,var_off=(0x0; 0xffffffff)) R5_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+16: (84) w9 = -w9                     ; R9_w=scalar()
+17: (b7) r5 = 468942677               ; R5_w=0x1bf37f55
+18: (bf) r3 = (s16)r5                 ; R3_w=32597 R5_w=0x1bf37f55
+19: (b7) r4 = 43                      ; R4_w=43
+20: (95) exit
+processed 21 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+include "spec.dfy"
+method testMain() {
+	var s := new State(
+		// allow_ptr_leak_set:bool, bypass_spec_v1_set:bool, priv_set:bool, has_net_admin:bool
+		false, false, true, false, 
+		false);
+	s.progType := BPF_PROG_TYPE_SYSCALL;
+	s.attachType := BPF_CGROUP_INET_INGRESS;
+
+	assume {:axiom} s.maps.Length == 5;
+	s.CreateMap(0, BPF_MAP_TYPE_LRU_PERCPU_HASH, 4, 8, 61381, 0, 0);
+
+	var immReg := new RegState(Rn);
+	var anybv8 := AnyBv8();
+	s.Mov64_IMM(s.r6, 1115645561); // Instruction 0
+	s.Mov32_REG(s.r4, s.r6); // Instruction 1
+	s.Neg32(s.r4, s.r0); // Instruction 2
+immReg.regVal := 1485489387; immReg.regType := SCALAR;
+ s.Store_STACKMEM(s.r10, immReg, -464, 4); // Instruction 3
+	s.Mov32_IMM(s.r8, 1692447773); // Instruction 4
+	s.Mov64_IMM(s.r8, -1323785719); // Instruction 5
+	s.Mov64_IMM(s.r0, 1560009199); // Instruction 6
+	s.Mov64_REG(s.r5, s.r6); // Instruction 7
+	s.SDiv32_IMM(s.r5, 16); // Instruction 8
+	s.Mov32SX8(s.r9, s.r0); // Instruction 9
+	s.Mov64_IMM(s.r2, -1314164539); // Instruction 10
+ s.Load_STACKMEM(s.r9, s.r10, -464, 8, false); // Instruction 11
+immReg.regVal := 284710901; immReg.regType := SCALAR;
+ s.Store_STACKMEM(s.r10, immReg, -428, 2); // Instruction 12
+	if s.r1.regType == PTR_TO_ARENA {  s.Load_ARENA(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == PTR_TO_TP_BUFFER {  s.Load_TPBUFFER(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == PTR_TO_SOCK_COMMON {  s.Load_SOCK(s.r2, s.r1, 383, 1, PTR_TO_SOCK_COMMON); // Instruction 13
+	} else if s.r1.regType == PTR_TO_TCP_SOCK {  s.Load_SOCK(s.r2, s.r1, 383, 1, PTR_TO_TCP_SOCK); // Instruction 13
+	} else if s.r1.regType == PTR_TO_PACKET_END {  s.Load_PACKET(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == PTR_TO_PACKET {  s.Load_PACKET(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == PTR_TO_SOCKET {  s.Load_SOCK(s.r2, s.r1, 383, 1, PTR_TO_SOCKET); // Instruction 13
+	} else if s.r1.regType == PTR_TO_PACKET_META {  s.Load_PACKET(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == PTR_TO_MAP_KEY {  s.Load_MAPKEY(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == PTR_TO_MAP_VALUE {  s.Load_MAPVALUE(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == PTR_TO_XDP_SOCK {  s.Load_SOCK(s.r2, s.r1, 383, 1, PTR_TO_XDP_SOCK); // Instruction 13
+	} else if s.r1.regType == MAP_PTR {  s.Load_MAPMEM(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == PTR_TO_FLOW_KEYS {  s.Load_FLOWKEYS(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == CTXMEM {  s.Load_CTXMEM(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else if s.r1.regType == STACKMEM {  s.Load_STACKMEM(s.r2, s.r1, 383, 1, false); // Instruction 13
+	} else { assert false; } // Instruction 13
+	if s.r1.regType == PTR_TO_ARENA {  s.Load_ARENA(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == PTR_TO_TP_BUFFER {  s.Load_TPBUFFER(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == PTR_TO_SOCK_COMMON {  s.Load_SOCK(s.r6, s.r1, 440, 4, PTR_TO_SOCK_COMMON); // Instruction 14
+	} else if s.r1.regType == PTR_TO_TCP_SOCK {  s.Load_SOCK(s.r6, s.r1, 440, 4, PTR_TO_TCP_SOCK); // Instruction 14
+	} else if s.r1.regType == PTR_TO_PACKET_END {  s.Load_PACKET(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == PTR_TO_PACKET {  s.Load_PACKET(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == PTR_TO_SOCKET {  s.Load_SOCK(s.r6, s.r1, 440, 4, PTR_TO_SOCKET); // Instruction 14
+	} else if s.r1.regType == PTR_TO_PACKET_META {  s.Load_PACKET(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == PTR_TO_MAP_KEY {  s.Load_MAPKEY(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == PTR_TO_MAP_VALUE {  s.Load_MAPVALUE(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == PTR_TO_XDP_SOCK {  s.Load_SOCK(s.r6, s.r1, 440, 4, PTR_TO_XDP_SOCK); // Instruction 14
+	} else if s.r1.regType == MAP_PTR {  s.Load_MAPMEM(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == PTR_TO_FLOW_KEYS {  s.Load_FLOWKEYS(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == CTXMEM {  s.Load_CTXMEM(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else if s.r1.regType == STACKMEM {  s.Load_STACKMEM(s.r6, s.r1, 440, 4, true); // Instruction 14
+	} else { assert false; } // Instruction 14
+	s.Mov32SX8(s.r0, s.r5); // Instruction 15
+	s.Neg32(s.r9, s.r0); // Instruction 16
+	s.Mov64_IMM(s.r5, 468942677); // Instruction 17
+	s.Mov64SX16(s.r3, s.r5); // Instruction 18
+	s.Mov64_IMM(s.r4, 43); // Instruction 19
+	s.EXIT(); // Instruction 20
+
+}
+/tmp/ebpf10831.dfy(27,1): Error: a precondition for this call could not be proved
+   |
+27 |  s.Load_STACKMEM(s.r9, s.r10, -464, 8, false); // Instruction 11
+   |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/spec.dfy(1404,17): Related location: this is the precondition that could not be proved
+     |
+1404 |         requires stack_readable(src, off, size)
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/spec.dfy(1387,46): Related location: this proposition could not be proved
+     |
+1387 |                     !this.allow_ptr_leak ==> (forall i | curOff <= i < (curOff + size) :: this.stackSlotTypes[memReg.memId][i] != UNINT))
+     |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Dafny program verifier finished with 0 verified, 1 error

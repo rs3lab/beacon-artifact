@@ -1,0 +1,62 @@
+From e3dc673364432ce8452558147ca2374dc0cdbabf Mon Sep 17 00:00:00 2001
+From: Tao Lyu <tao.lyu@epfl.ch>
+Date: Fri, 20 Oct 2023 19:23:06 +0200
+Subject: Incorrect atomic_exchg verification
+
+Hi,
+
+I found eBPF verifier is flawed
+when checking the atomic64_xchg instruction,
+which will cause usability issues.
+
+For example, the program below is safe and correct in privileged mode.
+However, it mis-rejects the program.
+Moreover, the error string is misleading.
+
+0: R1=ctx(off=0,imm=0) R10=fp0
+0: (7a) *(u64 *)(r10 -8) = 272        ; R10=fp0 fp-8_w=272
+1: (bf) r2 = r10                      ; R2_w=fp0 R10=fp0
+2: (db) r2 = atomic64_xchg((u64 *)(r2 -8), r2)
+misaligned access off (0x0; 0xffffffffffffffff)+0+-8 size 8
+
+The root cause of this bug is described below:
+
+When checking atomic exchange instructions in check_atomic(),
+the verifier checks the read and write safety on the memory r2-8.
+
+1) In the read check (first), it marks r2 as an unknown scalar, 
+as the instruction will assign the value from r2-8 to r2,
+and the value at r2-8 is unknown.
+
+2) When it comes to the second check, that is the write check,
+it checks whether the memory at r2-8 is writable.
+However, at this time, r2 is marked as scalar instead of stack pointer,
+thus, it reports this error.
+
+Signed-off-by: Tao Lyu <tao.lyu@epfl.ch>
+---
+ tools/testing/selftests/bpf/verifier/atomic_exchg.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/verifier/atomic_exchg.c
+
+diff --git a/tools/testing/selftests/bpf/verifier/atomic_exchg.c b/tools/testing/selftests/bpf/verifier/atomic_exchg.c
+new file mode 100644
+index 000000000000..f05ab5f45245
+--- /dev/null
++++ b/tools/testing/selftests/bpf/verifier/atomic_exchg.c
+@@ -0,0 +1,12 @@
++{
++    "Incorrect atomic_exchg verification",
++    .insns = {
++		BPF_ST_MEM(BPF_DW, BPF_REG_10, -8, 0x110),
++		BPF_MOV64_REG(BPF_REG_2, BPF_REG_10),
++		BPF_ATOMIC_OP(BPF_DW, BPF_XCHG, BPF_REG_2, BPF_REG_2, -8),
++        BPF_MOV64_IMM(BPF_REG_0, 1),
++        BPF_EXIT_INSN(),
++    },
++    .result = ACCEPT,
++},
++
+-- 
+2.25.1
+

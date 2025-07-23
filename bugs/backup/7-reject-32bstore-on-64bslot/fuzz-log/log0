@@ -1,0 +1,65 @@
+pre-print START
+(b4) w0 = 30810481
+(b4) w6 = 21
+(cc) w0 s>>= w6
+(62) *(u32 *)(r10 -288) = 231442005
+(6a) *(u16 *)(r10 -286) = 775661559
+(bf) r3 = r0
+(94) w3 s%= 16
+(bc) w5 = w6
+(dc) r5 = be32 r5
+(bc) w4 = w6
+(d7) r4 = bswap16 r4
+(91) r8 = *(s8 *)(r1 +338)
+(c4) w3 s>>= 2
+(95) exit
+pre-print END
+func#0 @0
+0: R1=ctx() R10=fp0
+0: (b4) w0 = 30810481                 ; R0_w=0x1d62171
+1: (b4) w6 = 21                       ; R6_w=21
+2: (cc) w0 s>>= w6                    ; R0_w=14 R6_w=21
+3: (62) *(u32 *)(r10 -288) = 231442005        ; R10=fp0 fp-288=mmmm0xdcb8655
+4: (6a) *(u16 *)(r10 -286) = 775661559
+attempt to corrupt spilled pointer on stack
+processed 5 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+include "spec.dfy"
+method testMain() {
+	var s := new State(
+		// allow_ptr_leak_set:bool, bypass_spec_v1_set:bool, priv_set:bool, has_net_admin:bool
+		false, false, true, false, 
+		true);
+	s.progType := BPF_PROG_TYPE_SK_REUSEPORT;
+	s.attachType := BPF_CGROUP_INET_INGRESS;
+
+	assume {:axiom} s.maps.Length == 5;
+	s.CreateMap(0, BPF_MAP_TYPE_SK_STORAGE, 4, 8, 0, 0, 0);
+	s.CreateMap(3, BPF_MAP_TYPE_PERF_EVENT_ARRAY, 0, 0, 0, 0, 0);
+
+	s.spin_lock_meta.isLocked := false;
+	s.r0.regType := SCALAR;
+	assume {:axiom} (!0) & s.r0.regVal == 14;
+	s.r0.regVal := s.r0.regVal + 0;
+	s.r1.regType := CTXMEM;
+	s.r1.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r1.regVal == 0;
+	s.r1.regVal := s.r1.regVal + 0;
+	s.r1.memId := 0;
+	s.r6.regType := SCALAR;
+	assume {:axiom} (!0) & s.r6.regVal == 21;
+	s.r6.regVal := s.r6.regVal + 0;
+	s.r10.regType := STACKMEM;
+	s.r10.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r10.regVal == 0;
+	s.r10.regVal := s.r10.regVal + 0;
+	s.r10.memId := 0;
+	var immReg := new RegState(Rn);
+	var anybv8 := AnyBv8();
+immReg.regVal := 775661559; immReg.regType := SCALAR;
+ s.Store_STACKMEM(s.r10, immReg, -286, 2); // Instruction 4
+// size of stack_branches: 0
+	
+
+}
+
+Dafny program verifier finished with 1 verified, 0 errors

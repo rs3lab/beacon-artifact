@@ -1,0 +1,77 @@
+From a63f5807b0afad20a5721b7349a04c07e08e0ba7 Mon Sep 17 00:00:00 2001
+From: Tao Lyu <tao.lyu@epfl.ch>
+Date: Mon, 25 Sep 2023 21:29:26 +0200
+Subject: [PATCH] bpf: Fix incorrect precision backtracking
+
+During backtracking, the verifier propagate the precision to
+the src_reg, if the intruction is an ALU or ALU64 but not MOV
+instruction and the instruction uses src_reg, which is determined
+by checking whether BPF_SRC(insn->code) == BPF_X (0x8).
+
+However, the condition is wrong. When executing a big endian swap
+instruction, BPF_SRC(insn->code) is used to express little/big
+endian and big endian is 0x8 as well, subsequently leading the big
+endian swap instruction satifies the above condition while without
+using src_reg. Thus, it incorrectly propagate the precision to r0.
+
+The patch adds one more condition to filter the swap instructions.
+
+Signed-off-by: Tao Lyu <tao.lyu@epfl.ch>
+---
+ kernel/bpf/verifier.c                         |  8 ++++++-
+ .../selftests/bpf/verifier/byte_swap.c        | 24 +++++++++++++++++++
+ 2 files changed, 31 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/bpf/verifier/byte_swap.c
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index eed7350e15f4..60db8d68d123 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -3529,7 +3529,13 @@ static int backtrack_insn(struct bpf_verifier_env *env, int idx, int subseq_idx,
+ 				bt_clear_reg(bt, dreg);
+ 			}
+ 		} else {
+-			if (BPF_SRC(insn->code) == BPF_X) {
++			/* Swap instructions (BPF_TO_BE) and BPF_X both
++			   use value 0x08 in the field of BPF_SRC.
++			   Thus, we have to check both the BPF_SRC and BPF_OP
++			   to decide whether the insn uses the src_reg and then
++			   propagate the precision to the src_reg.
++			*/
++			if (BPF_SRC(insn->code) == BPF_X && BPF_OP(insn->code) != BPF_END) {
+ 				/* dreg += sreg
+ 				 * both dreg and sreg need precision
+ 				 * before this insn
+diff --git a/tools/testing/selftests/bpf/verifier/byte_swap.c b/tools/testing/selftests/bpf/verifier/byte_swap.c
+new file mode 100644
+index 000000000000..96338a0ec748
+--- /dev/null
++++ b/tools/testing/selftests/bpf/verifier/byte_swap.c
+@@ -0,0 +1,24 @@
++{
++    "byte_swap: precision marking test",
++    .insns = {
++    BPF_MOV64_IMM(BPF_REG_2, 1),
++    BPF_MOV64_IMM(BPF_REG_3, 2),
++    BPF_CALL_REL(1),
++    BPF_EXIT_INSN(),
++    BPF_ALU64_IMM(BPF_NEG, BPF_REG_2, BPF_REG_0),
++    BPF_ENDIAN(BPF_X, BPF_REG_2, 32),
++    BPF_MOV64_REG(BPF_REG_4, BPF_REG_2),
++    BPF_ALU64_IMM(BPF_NEG, BPF_REG_4, BPF_REG_0),
++    BPF_ALU64_IMM(BPF_LSH, BPF_REG_4, 34),
++    BPF_ALU64_IMM(BPF_NEG, BPF_REG_2, BPF_REG_0),
++    BPF_MOV32_REG(BPF_REG_5, BPF_REG_4),
++    BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_1, -448),
++    BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -456),
++    BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_3, -464),
++    BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_4, -472),
++    BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_5, -480),
++    BPF_MOV64_IMM(BPF_REG_0, 0),
++    BPF_EXIT_INSN(),
++    },
++    .result = ACCEPT,
++},
+-- 
+2.25.1
+

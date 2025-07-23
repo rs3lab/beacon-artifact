@@ -1,0 +1,82 @@
+pre-print START
+(7b) *(u64 *)(r10 -424) = r1
+(b4) w3 = 477817991
+(d7) r3 = bswap32 r3
+(69) r2 = *(u16 *)(r10 -420)
+(b7) r0 = 208243743
+(79) r6 = *(u64 *)(r10 -184)
+(bf) r3 = r0
+(bc) w3 = w0
+(bc) w9 = w3
+(d4) r9 = le16 r9
+(91) r3 = *(s8 *)(r10 -294)
+(81) r3 = *(s32 *)(r10 -331)
+(6a) *(u16 *)(r1 +148) = -1741486587
+(46) if w3 & 0x5cf4bef7 goto pc+15
+(18) r4 = 0x5
+BUG_ld_00
+(34) w3 s/= 64
+(18) r6 = 0x1
+BUG_ld_00
+(bf) r0 = r10
+(7a) *(u64 *)(r10 -112) = 1050145887
+(18) r6 = 0xfffffffffc01bf43
+BUG_ld_00
+(72) *(u8 *)(r1 +489) = -2073871957
+(b7) r3 = -615113019
+(84) w3 = -w3
+(bc) w0 = w9
+(84) w0 = -w0
+(95) exit
+(bf) r6 = (s8)r3
+(bc) w5 = w6
+(d7) r5 = bswap16 r5
+(73) *(u8 *)(r10 -510) = r9
+(79) r3 = *(u64 *)(r10 -120)
+(b7) r6 = 1510739383
+(89) r0 = *(s16 *)(r10 -195)
+(06) gotol pc-16
+pre-print END
+func#0 @0
+0: R1=ctx() R10=fp0
+0: (7b) *(u64 *)(r10 -424) = r1       ; R1=ctx() R10=fp0 fp-424_w=ctx()
+1: (b4) w3 = 477817991                ; R3_w=0x1c7aec87
+2: (d7) r3 = bswap32 r3               ; R3_w=scalar()
+3: (69) r2 = *(u16 *)(r10 -420)
+invalid size of register fill
+processed 4 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+include "spec.dfy"
+method testMain() {
+	var s := new State(
+		// allow_ptr_leak_set:bool, bypass_spec_v1_set:bool, priv_set:bool, has_net_admin:bool
+		true, true, true, true, 
+		false);
+	s.progType := BPF_PROG_TYPE_SOCK_OPS;
+	s.attachType := BPF_CGROUP_INET_INGRESS;
+
+	assume {:axiom} s.maps.Length == 5;
+	s.CreateMap(0, BPF_MAP_TYPE_LRU_HASH, 4, 32, 52830, 0, 0);
+
+	s.spin_lock_meta.isLocked := false;
+	s.r1.regType := CTXMEM;
+	s.r1.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r1.regVal == 0;
+	s.r1.regVal := s.r1.regVal + 0;
+	s.r1.memId := 0;
+	s.r3.regType := SCALAR;
+	assume {:axiom} (!18446744073709551615) & s.r3.regVal == 0;
+	s.r3.regVal := s.r3.regVal + 0;
+	s.r10.regType := STACKMEM;
+	s.r10.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r10.regVal == 0;
+	s.r10.regVal := s.r10.regVal + 0;
+	s.r10.memId := 0;
+	var immReg := new RegState(Rn);
+	var anybv8 := AnyBv8();
+ s.Load_STACKMEM(s.r2, s.r10, -420, 2, false); // Instruction 3
+// size of stack_branches: 0
+	
+
+}
+
+Dafny program verifier finished with 1 verified, 0 errors

@@ -1,0 +1,120 @@
+pre-print START
+(61) r7 = *(u32 *)(r10 -100)
+(81) r5 = *(s32 *)(r10 -268)
+(18) r9 = 0x7
+BUG_ld_00
+(b4) w8 = 1313573267
+(84) w8 = -w8
+(bc) w2 = w8
+(dc) r2 = be32 r2
+(18) r7 = 0x5
+BUG_ld_00
+(bc) w4 = w2
+(dc) r4 = be16 r4
+(bf) r5 = r2
+(37) r5 s/= 44225883
+(7d) if r2 s>= r2 goto pc+8
+(c3) r10 = atomic_fetch_add((u32 *)(r9 +300), r10)
+(bf) r9 = r8
+(bf) r7 = r9
+(bc) w7 = (s8)w4
+(18) r2 = 0x4
+BUG_ld_00
+(b7) r7 = 70805275
+(91) r7 = *(s8 *)(r10 -42)
+(bc) w4 = w8
+(bf) r2 = (s8)r4
+(bf) r3 = r2
+(04) w3 += 32
+(b7) r0 = -426851735
+(95) exit
+pre-print END
+func#0 @0
+0: R1=ctx() R10=fp0
+0: (61) r7 = *(u32 *)(r10 -100)       ; R7_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0
+1: (81) r5 = *(s32 *)(r10 -268)       ; R5_w=scalar(smin=0xffffffff80000000,smax=0x7fffffff) R10=fp0
+2: (18) r9 = 0xff110003fbb24400       ; R9_w=map_ptr(ks=4,vs=4)
+4: (b4) w8 = 1313573267               ; R8_w=0x4e4b8993
+5: (84) w8 = -w8                      ; R8_w=scalar()
+6: (bc) w2 = w8                       ; R2_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R8_w=scalar()
+7: (dc) r2 = be32 r2                  ; R2_w=scalar()
+8: (18) r7 = 0xff110004054c6800       ; R7_w=map_ptr(ks=0,vs=4)
+10: (bc) w4 = w2                      ; R2_w=scalar() R4_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+11: (dc) r4 = be16 r4                 ; R4_w=scalar()
+12: (bf) r5 = r2                      ; R2_w=scalar(id=1) R5_w=scalar(id=1)
+13: (37) r5 s/= 44225883              ; R5=scalar()
+14: (7d) if r2 s>= r2 goto pc+8       ; R2=scalar(id=1,smin=0x8000000000000001,smax=0x7ffffffffffffffe)
+15: (c3) r10 = atomic_fetch_add((u32 *)(r9 +300), r10)
+frame pointer is read only
+processed 14 insns (limit 1000000) max_states_per_insn 0 total_states 1 peak_states 1 mark_read 1
+include "spec.dfy"
+method testMain() {
+	var s := new State(
+		// allow_ptr_leak_set:bool, bypass_spec_v1_set:bool, priv_set:bool, has_net_admin:bool
+		true, true, true, true, 
+		true);
+	s.progType := BPF_PROG_TYPE_SOCK_OPS;
+	s.attachType := BPF_CGROUP_INET_INGRESS;
+
+	assume {:axiom} s.maps.Length == 5;
+	s.CreateMap(0, BPF_MAP_TYPE_HASH, 4, 32, 44997, 0, 0);
+	s.CreateMap(3, BPF_MAP_TYPE_STACK_TRACE, 0, 0, 0, 0, 0);
+
+	s.spin_lock_meta.isLocked := false;
+	s.r1.regType := CTXMEM;
+	s.r1.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r1.regVal == 0;
+	s.r1.regVal := s.r1.regVal + 0;
+	s.r1.memId := 0;
+	s.r2.regType := SCALAR;
+	assume {:axiom} (!18446744073709551615) & s.r2.regVal == 0;
+	s.r2.regVal := s.r2.regVal + 0;
+	s.r4.regType := SCALAR;
+	assume {:axiom} (!18446744073709551615) & s.r4.regVal == 0;
+	s.r4.regVal := s.r4.regVal + 0;
+	s.r5.regType := SCALAR;
+	assume {:axiom} (!18446744073709551615) & s.r5.regVal == 0;
+	s.r5.regVal := s.r5.regVal + 0;
+	s.r7.regType := MAP_PTR;
+	assume {:axiom} (!0) & s.r7.regVal == 0;
+	s.r7.regVal := s.r7.regVal + 0;
+	s.r7.memId := 0;
+	s.r7.mapFd := 0;
+	s.r8.regType := SCALAR;
+	assume {:axiom} (!18446744073709551615) & s.r8.regVal == 0;
+	s.r8.regVal := s.r8.regVal + 0;
+	s.r9.regType := MAP_PTR;
+	assume {:axiom} (!0) & s.r9.regVal == 0;
+	s.r9.regVal := s.r9.regVal + 0;
+	s.r9.memId := 0;
+	s.r9.mapFd := 0;
+	s.r10.regType := STACKMEM;
+	s.r10.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r10.regVal == 0;
+	s.r10.regVal := s.r10.regVal + 0;
+	s.r10.memId := 0;
+	var immReg := new RegState(Rn);
+	var anybv8 := AnyBv8();
+	if (!s.LGJMP64_REG(s.r2, s.r2, JSGE)) { // Instruction 14
+		if s.r9.regType == PTR_TO_ARENA {  s.AtomicLS_ARENA(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_TP_BUFFER {  s.AtomicLS_TPBUFFER(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_SOCK_COMMON {  s.AtomicLS_SOCK(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_TCP_SOCK {  s.AtomicLS_SOCK(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_PACKET_END {  s.AtomicLS_PACKET(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_PACKET {  s.AtomicLS_PACKET(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_SOCKET {  s.AtomicLS_SOCK(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_PACKET_META {  s.AtomicLS_PACKET(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_MAP_KEY {  s.AtomicLS_MAPKEY(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_MAP_VALUE {  s.AtomicLS_MAPVALUE(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_XDP_SOCK {  s.AtomicLS_SOCK(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == MAP_PTR {  s.AtomicLS_MAPMEM(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == PTR_TO_FLOW_KEYS {  s.AtomicLS_FLOWKEYS(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == CTXMEM {  s.AtomicLS_CTXMEM(s.r9, s.r10, 300, 4, true); // Instruction 15
+		} else if s.r9.regType == STACKMEM {  s.AtomicLS_STACKMEM(s.r9, s.r10, 300, 4, true); // Instruction 15
+	} else { assert false; } // Instruction 15
+// size of stack_branches: 2
+	}
+
+}
+
+Dafny program verifier finished with 1 verified, 0 errors

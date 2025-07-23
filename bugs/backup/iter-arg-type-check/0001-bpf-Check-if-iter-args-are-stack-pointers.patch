@@ -1,0 +1,47 @@
+From a8f4d5ba71acbf6f5efee39e1e84f551b210dc29 Mon Sep 17 00:00:00 2001
+From: Tao Lyu <tao.lyu@epfl.ch>
+Date: Sun, 17 Nov 2024 21:33:42 +0000
+Subject: [PATCH 1/2] bpf: Check if iter args are stack pointers
+
+The verifier misses the type checking on iter arguments,
+so any pointer types (e.g., map value pointers) can be passed
+as iter arguments.
+
+We fix this issue by adding a type check to ensure the passed
+iter arguments are in the type of PTR_TO_STACK.
+
+Fixes: 06accc8779c1 ("bpf: add support for open-coded iterator loops")
+Signed-off-by: Tao Lyu <tao.lyu@epfl.ch>
+---
+ kernel/bpf/verifier.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 797cf3ed32e0..482a61a952a1 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -7901,7 +7901,7 @@ static int process_dynptr_func(struct bpf_verifier_env *env, int regno, int insn
+ 	if (reg->type != PTR_TO_STACK && reg->type != CONST_PTR_TO_DYNPTR) {
+ 		verbose(env,
+ 			"arg#%d expected pointer to stack or const struct bpf_dynptr\n",
+-			regno);
++			regno - 1);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -8019,6 +8019,12 @@ static int process_iter_arg(struct bpf_verifier_env *env, int regno, int insn_id
+ 	const struct btf_type *t;
+ 	int spi, err, i, nr_slots, btf_id;
+ 
++	/* Ensure the iter arg is a stack pointer */
++	if (reg->type != PTR_TO_STACK) {
++		verbose(env, "arg#%d expected pointer to the iterator\n", regno - 1);
++		return -EINVAL;
++	}
++
+ 	/* For iter_{new,next,destroy} functions, btf_check_iter_kfuncs()
+ 	 * ensures struct convention, so we wouldn't need to do any BTF
+ 	 * validation here. But given iter state can be passed as a parameter
+-- 
+2.34.1
+

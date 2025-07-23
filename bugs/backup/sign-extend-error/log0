@@ -1,0 +1,246 @@
+pre-print START
+(b7) r3 = -1144278327
+(81) r0 = *(s32 *)(r10 -152)
+(bf) r5 = r3
+(67) r5 <<= 51
+(bf) r2 = r3
+(97) r2 s%= 1688481373
+(bc) w5 = (s8)w3
+(bc) w7 = w3
+(dc) r7 = be16 r7
+(69) r5 = *(u16 *)(r10 -508)
+(18) r2 = 0x6
+BUG_ld_00
+(bf) r9 = r5
+(89) r2 = *(s16 *)(r10 -192)
+(bc) w9 = (s16)w9
+(bc) w9 = (s8)w5
+(c5) if r9 s< 0x6ab80177 goto pc+17
+(bf) r0 = r7
+(87) r0 = -r0
+(91) r2 = *(s8 *)(r1 +256)
+(89) r0 = *(s16 *)(r10 -102)
+(18) r2 = 0xfffffffff77f8889
+BUG_ld_00
+(bc) w6 = (s16)w5
+(d4) r3 = le16 r3
+(b7) r6 = 1913956835
+(72) *(u8 *)(r10 -174) = -1620316781
+(63) *(u32 *)(r1 +474) = r1
+(18) r9 = 0x34debcf9
+BUG_ld_00
+(b7) r7 = -1662883299
+(c3) r10 = atomic_fetch_or((u32 *)(r5 +0), r10)
+(bf) r4 = r5
+(47) r4 |= 1487287713
+(18) r9 = 0x2
+BUG_ld_00
+(6a) *(u16 *)(r10 -460) = 57177231
+(91) r4 = *(s8 *)(r10 -144)
+(bf) r2 = r5
+(bf) r5 = r2
+(b4) w2 = -2126399829
+(95) exit
+pre-print END
+func#0 @0
+0: R1=ctx() R10=fp0
+0: (b7) r3 = -1144278327              ; R3_w=0xffffffffbbcbb2c9
+1: (81) r0 = *(s32 *)(r10 -152)       ; R0_w=scalar(smin=0xffffffff80000000,smax=0x7fffffff) R10=fp0
+2: (bf) r5 = r3                       ; R3_w=0xffffffffbbcbb2c9 R5_w=0xffffffffbbcbb2c9
+3: (67) r5 <<= 51                     ; R5_w=0x9648000000000000
+4: (bf) r2 = r3                       ; R2_w=0xffffffffbbcbb2c9 R3_w=0xffffffffbbcbb2c9
+5: (97) r2 s%= 1688481373
+sample state 2: 6, rec_block: 6
+6: R2_w=scalar()
+6: (bc) w5 = (s8)w3                   ; R3_w=0xffffffffbbcbb2c9 R5_w=0xffffffc9
+7: (bc) w7 = w3                       ; R3_w=0xffffffffbbcbb2c9 R7_w=0xbbcbb2c9
+8: (dc) r7 = be16 r7                  ; R7_w=scalar()
+9: (69) r5 = *(u16 *)(r10 -508)
+sample state 2: 10, rec_block: 3
+10: R5_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff)) R10=fp0
+10: (18) r2 = 0xffff88814a1c6800      ; R2_w=map_ptr(ks=4,vs=16)
+12: (bf) r9 = r5                      ; R5_w=scalar(id=1,smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff)) R9_w=scalar(id=1,smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff))
+13: (89) r2 = *(s16 *)(r10 -192)      ; R2_w=scalar(smin=smin32=-32768,smax=smax32=32767) R10=fp0
+14: (bc) w9 = (s16)w9
+sample state 2: 15, rec_block: 3
+15: R9_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=32767,var_off=(0x0; 0x7fff))
+15: (bc) w9 = (s8)w5                  ; R5=scalar(id=1,smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff)) R9=scalar(smin=smin32=0,smax=umax=smax32=umax32=127,var_off=(0x0; 0x7f))
+16: (c5) if r9 s< 0x6ab80177 goto pc+17
+mark_precise: frame0: last_idx 16 first_idx 16 subseq_idx -1 
+mark_precise: frame0: parent state regs=r9 stack=:  R0_w=scalar(smin=0xffffffff80000000,smax=0x7fffffff) R1=ctx() R2_w=scalar(smin=smin32=-32768,smax=smax32=32767) R3_w=0xffffffffbbcbb2c9 R5_w=scalar(id=1,smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff)) R7_w=scalar() R9_rw=Pscalar(smin=smin32=0,smax=umax=smax32=umax32=127,var_off=(0x0; 0x7f)) R10=fp0
+mark_precise: frame0: last_idx 15 first_idx 0 subseq_idx 16 
+mark_precise: frame0: regs=r9 stack= before 15: (bc) w9 = (s8)w5
+mark_precise: frame0: regs=r5 stack= before 14: (bc) w9 = (s16)w9
+mark_precise: frame0: regs=r5 stack= before 13: (89) r2 = *(s16 *)(r10 -192)
+mark_precise: frame0: regs=r5 stack= before 12: (bf) r9 = r5
+mark_precise: frame0: regs=r5 stack= before 10: (18) r2 = 0xffff88814a1c6800
+mark_precise: frame0: regs=r5 stack= before 9: (69) r5 = *(u16 *)(r10 -508)
+16: R9=scalar(smin=smin32=0,smax=umax=smax32=umax32=127,var_off=(0x0; 0x7f))
+sample state 2: 34, rec_block: 1
+34: (18) r9 = 0xffff88814a1c6800      ; R9_w=map_ptr(ks=4,vs=16)
+36: (6a) *(u16 *)(r10 -460) = 57177231        ; R10=fp0 fp-464=??mm????
+37: (91) r4 = *(s8 *)(r10 -144)       ; R4_w=scalar(smin=smin32=-128,smax=smax32=127) R10=fp0
+38: (bf) r2 = r5
+sample state 2: 39, rec_block: 3
+39: R2_w=scalar(id=1,smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff)) R5=scalar(id=1,smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff))
+39: (bf) r5 = r2                      ; R2_w=scalar(id=1,smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff)) R5_w=scalar(id=1,smin=smin32=0,smax=umax=smax32=umax32=0xffff,var_off=(0x0; 0xffff))
+40: (b4) w2 = -2126399829             ; R2_w=0x8141b6ab
+41: (95) exit
+sample state 1: 41
+processed 23 insns (limit 1000000) max_states_per_insn 0 total_states 2 peak_states 2 mark_read 2
+
+Insns debug:
+B7030000C9B2CBBB81A068FF00000000
+include "spec.dfy"
+method testMain() {
+	var s := new State(
+		// allow_ptr_leak_set:bool, bypass_spec_v1_set:bool, priv_set:bool, has_net_admin:bool
+		true, true, true, true, 
+		true);
+	s.progType := BPF_PROG_TYPE_SCHED_ACT;
+	s.attachType := BPF_CGROUP_INET_INGRESS;
+
+	assume {:axiom} s.maps.Length == 5;
+	s.CreateMap(0, BPF_MAP_TYPE_USER_RINGBUF, 0, 0, 262144, 0, 0);
+
+	var immReg := new RegState(Rn);
+	var anybv8 := AnyBv8();
+	s.Mov64_IMM(s.r3, -1144278327); // Instruction 0
+ s.Load_STACKMEM(s.r0, s.r10, -152, 4, true); // Instruction 1
+	s.Mov64_REG(s.r5, s.r3); // Instruction 2
+	s.Bvshl64_IMM(s.r5, 51); // Instruction 3
+	s.Mov64_REG(s.r2, s.r3); // Instruction 4
+	s.SMod64_IMM(s.r2, 1688481373); // Instruction 5
+	s.Mov32SX8(s.r5, s.r3); // Instruction 6
+	s.Mov32_REG(s.r7, s.r3); // Instruction 7
+	s.Bv2be16(s.r7, s.r0); // Instruction 8
+ s.Load_STACKMEM(s.r5, s.r10, -508, 2, false); // Instruction 9
+	s.Load_MAPFD(s.r2, 2); // Instruction 10
+	s.Mov64_REG(s.r9, s.r5); // Instruction 12
+ s.Load_STACKMEM(s.r2, s.r10, -192, 2, true); // Instruction 13
+	s.Mov32SX16(s.r9, s.r9); // Instruction 14
+	s.Mov32SX8(s.r9, s.r5); // Instruction 15
+	if (!s.LGJMP64_IMM(s.r9, 1790443895, JSLT)) { // Instruction 16
+		s.Mov64_REG(s.r0, s.r7); // Instruction 17
+		s.Neg64(s.r0, s.r0); // Instruction 18
+		if s.r1.regType == PTR_TO_ARENA {  s.Load_ARENA(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == PTR_TO_TP_BUFFER {  s.Load_TPBUFFER(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == PTR_TO_SOCK_COMMON {  s.Load_SOCK(s.r2, s.r1, 256, 1, PTR_TO_SOCK_COMMON); // Instruction 19
+		} else if s.r1.regType == PTR_TO_TCP_SOCK {  s.Load_SOCK(s.r2, s.r1, 256, 1, PTR_TO_TCP_SOCK); // Instruction 19
+		} else if s.r1.regType == PTR_TO_PACKET_END {  s.Load_PACKET(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == PTR_TO_PACKET {  s.Load_PACKET(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == PTR_TO_SOCKET {  s.Load_SOCK(s.r2, s.r1, 256, 1, PTR_TO_SOCKET); // Instruction 19
+		} else if s.r1.regType == PTR_TO_PACKET_META {  s.Load_PACKET(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == PTR_TO_MAP_KEY {  s.Load_MAPKEY(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == PTR_TO_MAP_VALUE {  s.Load_MAPVALUE(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == PTR_TO_XDP_SOCK {  s.Load_SOCK(s.r2, s.r1, 256, 1, PTR_TO_XDP_SOCK); // Instruction 19
+		} else if s.r1.regType == MAP_PTR {  s.Load_MAPMEM(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == PTR_TO_FLOW_KEYS {  s.Load_FLOWKEYS(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == CTXMEM {  s.Load_CTXMEM(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else if s.r1.regType == STACKMEM {  s.Load_STACKMEM(s.r2, s.r1, 256, 1, true); // Instruction 19
+		} else { assert false; } // Instruction 19
+ s.Load_STACKMEM(s.r0, s.r10, -102, 2, true); // Instruction 20
+		s.Load_Imm64(s.r2, -142636919); // Instruction 21
+		s.Mov32SX16(s.r6, s.r5); // Instruction 23
+		s.Bv2le16(s.r3, s.r0); // Instruction 24
+		s.Mov64_IMM(s.r6, 1913956835); // Instruction 25
+immReg.regVal := -1620316781; immReg.regType := SCALAR;
+ s.Store_STACKMEM(s.r10, immReg, -174, 1); // Instruction 26
+		if s.r1.regType == PTR_TO_ARENA { s.Store_ARENA(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_TP_BUFFER { s.Store_TPBUFFER(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_SOCK_COMMON { s.Store_SOCK(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_TCP_SOCK { s.Store_SOCK(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_PACKET_END { s.Store_PACKET(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_PACKET { s.Store_PACKET(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_SOCKET { s.Store_SOCK(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_PACKET_META { s.Store_PACKET(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_MAP_KEY { s.Store_MAPKEY(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_MAP_VALUE { s.Store_MAPVALUE(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_XDP_SOCK { s.Store_SOCK(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == MAP_PTR { s.Store_MAPMEM(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == PTR_TO_FLOW_KEYS { s.Store_FLOWKEYS(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == CTXMEM { s.Store_CTXMEM(s.r1, s.r1, 474, 4); // Instruction 27
+		} else if s.r1.regType == STACKMEM { s.Store_STACKMEM(s.r1, s.r1, 474, 4); // Instruction 27
+	} else { assert false; } // Instruction 27
+		s.Load_Imm64(s.r9, 887012601); // Instruction 28
+		s.Mov64_IMM(s.r7, -1662883299); // Instruction 30
+		if s.r5.regType == PTR_TO_ARENA {  s.AtomicLS_ARENA(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_TP_BUFFER {  s.AtomicLS_TPBUFFER(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_SOCK_COMMON {  s.AtomicLS_SOCK(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_TCP_SOCK {  s.AtomicLS_SOCK(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_PACKET_END {  s.AtomicLS_PACKET(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_PACKET {  s.AtomicLS_PACKET(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_SOCKET {  s.AtomicLS_SOCK(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_PACKET_META {  s.AtomicLS_PACKET(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_MAP_KEY {  s.AtomicLS_MAPKEY(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_MAP_VALUE {  s.AtomicLS_MAPVALUE(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_XDP_SOCK {  s.AtomicLS_SOCK(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == MAP_PTR {  s.AtomicLS_MAPMEM(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == PTR_TO_FLOW_KEYS {  s.AtomicLS_FLOWKEYS(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == CTXMEM {  s.AtomicLS_CTXMEM(s.r5, s.r10, 0, 4, true); // Instruction 31
+		} else if s.r5.regType == STACKMEM {  s.AtomicLS_STACKMEM(s.r5, s.r10, 0, 4, true); // Instruction 31
+	} else { assert false; } // Instruction 31
+		s.Mov64_REG(s.r4, s.r5); // Instruction 32
+		s.Bvor64_IMM(s.r4, 1487287713); // Instruction 33
+		s.Load_MAPFDIDX(s.r9, 2); // Instruction 34
+immReg.regVal := 57177231; immReg.regType := SCALAR;
+ s.Store_STACKMEM(s.r10, immReg, -460, 2); // Instruction 36
+ s.Load_STACKMEM(s.r4, s.r10, -144, 1, true); // Instruction 37
+		s.Mov64_REG(s.r2, s.r5); // Instruction 38
+		s.Mov64_REG(s.r5, s.r2); // Instruction 39
+		s.Mov32_IMM(s.r2, -2126399829); // Instruction 40
+	s.EXIT(); // 3  // Instruction 41
+	} else {
+		s.Load_MAPFDIDX(s.r9, 2); // Instruction 34
+immReg.regVal := 57177231; immReg.regType := SCALAR;
+ s.Store_STACKMEM(s.r10, immReg, -460, 2); // Instruction 36
+ s.Load_STACKMEM(s.r4, s.r10, -144, 1, true); // Instruction 37
+		s.Mov64_REG(s.r2, s.r5); // Instruction 38
+		s.Mov64_REG(s.r5, s.r2); // Instruction 39
+		s.Mov32_IMM(s.r2, -2126399829); // Instruction 40
+		s.EXIT(); // 2  // Instruction 41
+		}
+
+}
+/tmp/ebpf1007419.dfy(46,38): Error: a precondition for this call could not be proved
+   |
+46 | 		} else if s.r1.regType == CTXMEM {  s.Load_CTXMEM(s.r2, s.r1, 256, 1, true); // Instruction 19
+   |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/spec.dfy(1473,17): Related location: this is the precondition that could not be proved
+     |
+1473 |         requires context_access_safe(this.progType, (bv64ToInt64(src.regVal) + off), size, READ, this.attachType, this.priv)
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/ctxmem-precond.dfy(15,63): Related location: this proposition could not be proved
+   |
+15 |             case BPF_PROG_TYPE_SCHED_ACT                    => tc_cls_act_CTX(off1, size1, acct, attachType, priv)
+   |                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/ctxmem-precond.dfy(250,8): Related location: this proposition could not be proved
+    |
+250 |         narrow_4_read(off, size, 0, acct) ||
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/ebpf1007419.dfy(69,37): Error: a precondition for this call could not be proved
+   |
+69 | 		} else if s.r1.regType == CTXMEM { s.Store_CTXMEM(s.r1, s.r1, 474, 4); // Instruction 27
+   |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/spec.dfy(1452,17): Related location: this is the precondition that could not be proved
+     |
+1452 |         requires context_access_safe(this.progType, (bv64ToInt64(dst.regVal) + off), size, WRITE, this.attachType, this.priv)
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/ctxmem-precond.dfy(9,9): Related location: this proposition could not be proved
+  |
+9 |         (off1 % size1 == 0)
+  |          ^^^^^^^^^^^^^^^^^
+
+/tmp/ebpf1007419.dfy(89,17): Error: assertion might not hold
+   |
+89 | 	} else { assert false; } // Instruction 31
+   |                  ^^^^^
+
+
+Dafny program verifier finished with 0 verified, 3 errors

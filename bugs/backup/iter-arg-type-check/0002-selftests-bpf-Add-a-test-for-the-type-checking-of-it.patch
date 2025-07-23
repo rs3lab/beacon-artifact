@@ -1,0 +1,47 @@
+From b8b896604ef0bf07f97ff1aca3aaeba22b1301c5 Mon Sep 17 00:00:00 2001
+From: Tao Lyu <tao.lyu@epfl.ch>
+Date: Sun, 17 Nov 2024 21:34:16 +0000
+Subject: [PATCH 2/2] selftests/bpf: Add a test for the type checking of iter
+ args
+
+This is a selftest for the type checking of iter arguments.
+When passing a PTR_TO_MAP_VALUE to bpf_iter_num_* kfuncs,
+the program should be rejected.
+
+Signed-off-by: Tao Lyu <tao.lyu@epfl.ch>
+---
+ tools/testing/selftests/bpf/progs/iters.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/tools/testing/selftests/bpf/progs/iters.c b/tools/testing/selftests/bpf/progs/iters.c
+index ef70b88bccb2..613037ececb9 100644
+--- a/tools/testing/selftests/bpf/progs/iters.c
++++ b/tools/testing/selftests/bpf/progs/iters.c
+@@ -1486,4 +1486,24 @@ int iter_subprog_check_stacksafe(const void *ctx)
+ 	return 0;
+ }
+ 
++SEC("raw_tp")
++__failure __msg("arg#0 expected pointer to the iterator")
++int iter_check_arg_type(const void *ctx)
++{
++	struct bpf_iter_num it;
++
++	int *map_val = NULL;
++	int key = 0;
++
++	map_val = bpf_map_lookup_elem(&arr_map, &key);
++	if (!map_val)
++		return 0;
++
++	bpf_iter_num_new(&it, 0, 3);
++	while (bpf_iter_num_next((struct bpf_iter_num *)map_val))
++	bpf_iter_num_destroy(&it);
++
++	return 0;
++}
++
+ char _license[] SEC("license") = "GPL";
+-- 
+2.34.1
+

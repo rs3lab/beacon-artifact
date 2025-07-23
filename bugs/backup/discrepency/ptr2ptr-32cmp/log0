@@ -1,0 +1,104 @@
+pre-print START
+(b7) r2 = -738567529
+(b7) r4 = 35
+(6f) r2 <<= r4
+(dc) r2 = be32 r2
+(18) r3 = 0x2c48395d
+BUG_ld_00
+(18) r4 = 0x0
+BUG_ld_00
+(bc) w9 = (s16)w2
+(18) r3 = 0x0
+BUG_ld_00
+(18) r6 = 0x2
+BUG_ld_00
+(bf) r0 = r9
+(3e) if w10 >= w4 goto pc+7
+(69) r6 = *(u16 *)(r10 -428)
+(b7) r7 = 355227953
+(73) *(u8 *)(r10 -301) = r1
+(89) r2 = *(s16 *)(r1 +324)
+(d4) r7 = le64 r7
+(b4) w6 = 1908518713
+(95) exit
+(81) r4 = *(s32 *)(r1 +16)
+(b7) r5 = 1158056213
+(18) r4 = 0x0
+BUG_ld_00
+(bc) w5 = w9
+(89) r6 = *(s16 *)(r10 -208)
+(bf) r0 = (s32)r0
+(18) r0 = 0x0
+BUG_ld_00
+(bf) r3 = r2
+(63) *(u32 *)(r1 +30) = r0
+(b7) r5 = -232711841
+(bf) r4 = r3
+(bf) r5 = r4
+(06) gotol pc-22
+pre-print END
+func#0 @0
+0: R1=ctx() R10=fp0
+0: (b7) r2 = -738567529               ; R2_w=0xffffffffd3fa5a97
+1: (b7) r4 = 35                       ; R4_w=35
+2: (6f) r2 <<= r4                     ; R2_w=0x9fd2d4b800000000 R4_w=35
+3: (dc) r2 = be32 r2                  ; R2_w=scalar()
+4: (18) r3 = 0x2c48395d               ; R3_w=0x2c48395d
+6: (18) r4 = 0x0                      ; R4_w=map_ptr(ks=4,vs=1)
+8: (bc) w9 = (s16)w2                  ; R2_w=scalar() R9_w=scalar(smin=0,smax=umax=0xffffffff,smin32=-32768,smax32=32767,var_off=(0x0; 0xffffffff))
+9: (18) r3 = 0x0                      ; R3_w=map_ptr(ks=4,vs=1)
+11: (18) r6 = 0xff110003383f7000      ; R6_w=map_ptr(ks=4,vs=4)
+13: (bf) r0 = r9                      ; R0_w=scalar(id=1,smin=0,smax=umax=0xffffffff,smin32=-32768,smax32=32767,var_off=(0x0; 0xffffffff)) R9_w=scalar(id=1,smin=0,smax=umax=0xffffffff,smin32=-32768,smax32=32767,var_off=(0x0; 0xffffffff))
+14: (3e) if w10 >= w4 goto pc+7
+R4 pointer comparison prohibited
+processed 11 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+include "spec.dfy"
+method testMain() {
+	var s := new State(
+		// allow_ptr_leak_set:bool, bypass_spec_v1_set:bool, priv_set:bool, has_net_admin:bool
+		false, false, true, false, 
+		false);
+	s.progType := BPF_PROG_TYPE_SOCKET_FILTER;
+	s.attachType := BPF_CGROUP_INET_INGRESS;
+
+	assume {:axiom} s.maps.Length == 5;
+	s.CreateMap(0, BPF_MAP_TYPE_STACK, 0, 4, 93, 0, 0);
+
+	s.spin_lock_meta.isLocked := false;
+	s.r1.regType := CTXMEM;
+	s.r1.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r1.regVal == 0;
+	s.r1.regVal := s.r1.regVal + 0;
+	s.r1.memId := 0;
+	s.r2.regType := SCALAR;
+	assume {:axiom} (!18446744073709551615) & s.r2.regVal == 0;
+	s.r2.regVal := s.r2.regVal + 0;
+	s.r3.regType := MAP_PTR;
+	assume {:axiom} (!0) & s.r3.regVal == 0;
+	s.r3.regVal := s.r3.regVal + 0;
+	s.r3.memId := 0;
+	s.r3.mapFd := 0;
+	s.r4.regType := MAP_PTR;
+	assume {:axiom} (!0) & s.r4.regVal == 0;
+	s.r4.regVal := s.r4.regVal + 0;
+	s.r4.memId := 0;
+	s.r4.mapFd := 0;
+	s.r9.regType := SCALAR;
+	assume {:axiom} (!4294967295) & s.r9.regVal == 0;
+	s.r9.regVal := s.r9.regVal + 0;
+	s.r10.regType := STACKMEM;
+	s.r10.regVal := AnyBv64();
+	assume {:axiom} (!0) & s.r10.regVal == 0;
+	s.r10.regVal := s.r10.regVal + 0;
+	s.r10.memId := 0;
+	var immReg := new RegState(Rn);
+	var anybv8 := AnyBv8();
+	s.Load_MAPFDIDX(s.r6, 2); // Instruction 11
+	s.Mov64_REG(s.r0, s.r9); // Instruction 13
+	if (!s.LGJMP32_REG(s.r10, s.r4, JGE)) { // Instruction 14
+// size of stack_branches: 2
+	}
+
+}
+
+Dafny program verifier finished with 1 verified, 0 errors

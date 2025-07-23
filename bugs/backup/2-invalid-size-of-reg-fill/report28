@@ -1,0 +1,975 @@
+(struct bpf_insn){ .code = 183, .dst_reg = 0, .src_reg = 0, .off = 0, .imm = 0 },
+(struct bpf_insn){ .code = 149, .dst_reg = 0, .src_reg = 0, .off = 0, .imm = 0 },
+2023/10/10 01:53:12 Generating BTF load call
+2023/10/10 01:53:12 Generating map call
+2023/10/10 01:53:12 Generating load call
+2023/10/10 01:54:56 SYZFATAL: executor 0 failed 11 times: executor 0: exit status 67
+eBPF BTF log:|
+magic: 0xeb9f
+version: 1
+flags: 0x0
+hdr_len: 24
+type_off: 0
+type_len: 84
+str_off: 84
+str_len: 23
+btf_total_size: 131
+[1] INT int size=4 bits_offset=0 nr_bits=32 encoding=SIGNED
+[2] PTR (anon) type_id=1
+[3] FUNC func1 type_id=4
+[4] FUNC_PROTO (anon) return=1 args=(2 p1, 2 p2, 2 p3, 2 p4)
+
+eBPF verifier log:
+func#0 @0
+func#1 @241
+0: R1=ctx(off=0,imm=0) R10=fp0
+0: (b7) r0 = -20513793                ; R0_w=-20513793
+1: (1f) r0 -= r0                      ; R0_w=0
+2: (94) w0 %= 239712941               ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+3: (7b) *(u64 *)(r10 -448) = r1       ; R1=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+4: (bf) r2 = r1                       ; R1=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+5: (bf) r3 = r1                       ; R1=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0)
+6: (bf) r4 = r1                       ; R1=ctx(off=0,imm=0) R4=ctx(off=0,imm=0)
+7: (85) call pc+233
+caller:
+ R10=fp0 fp-448=ctx
+callee:
+ frame1: R1=ctx(off=0,imm=0) R2=ctx(off=0,imm=0) R3=ctx(off=0,imm=0) R4=ctx(off=0,imm=0) R10=fp0
+241: frame1:
+241: (b7) r7 = -1634332253            ; frame1: R7_w=-1634332253
+242: (77) r7 >>= 10                   ; frame1: R7_w=18014398507885956
+243: (bc) w6 = w7                     ; frame1: R6_w=4293371268 R7_w=18014398507885956
+244: (27) r7 *= -1298270869           ; frame1: R7_w=6541298735600468524
+245: (87) r6 = -r6                    ; frame1: R6_w=scalar()
+246: (a4) w6 ^= 319035929             ; frame1: R6_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+247: (24) w7 *= -1227960499           ; frame1: R7_w=1582938940
+248: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+249: (bf) r6 = r10                    ; frame1: R6_w=fp0 R10=fp0
+250: (bc) w2 = w7                     ; frame1: R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R7_w=scalar()
+251: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+252: (dc) r2 = be16 r2                ; frame1: R2_w=scalar()
+253: (47) r7 |= -1172190071           ; frame1: R7_w=scalar(umin=18446744072537361545,var_off=(0xffffffffba21cc89; 0x45de3376),u32_min=-1172190071)
+254: (14) w7 -= 2007565469            ; frame1: R7_w=scalar(umin=1115211756,umax=2287401826,var_off=(0xc000; 0xcffe3ffe),s32_min=-2147434496,s32_max=1342111742)
+255: (37) r2 /= -643750851            ; frame1: R2_w=scalar()
+256: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+257: (44) w7 |= 2106886615            ; frame1: R7_w=scalar(umin=2106886615,umax=4294967295,var_off=(0x7d9489d7; 0x826b7628),s32_min=-40597033)
+258: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+259: (b7) r5 = -263441571             ; frame1: R5_w=-263441571
+260: (bf) r3 = r5                     ; frame1: R3_w=-263441571 R5_w=-263441571
+261: (bf) r6 = r3                     ; frame1: R3_w=-263441571 R6_w=-263441571
+262: (b7) r5 = 56                     ; frame1: R5_w=56
+263: (6f) r6 <<= r5                   ; frame1: R5_w=56 R6_w=6701356245527298048
+264: (bc) w8 = w7                     ; frame1: R7_w=scalar() R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+265: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+266: (b4) w7 = -450841245             ; frame1: R7_w=3844126051
+267: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+268: (b7) r9 = -317194555             ; frame1: R9_w=-317194555
+269: (87) r9 = -r9                    ; frame1: R9_w=scalar()
+270: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+271: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+272: (17) r5 -= -1188531907           ; frame1: R5_w=1188531963
+273: (dc) r7 = be32 r7                ; frame1: R7_w=scalar()
+274: (74) w9 >>= 30                   ; frame1: R9_w=scalar(umax=3,var_off=(0x0; 0x3))
+275: (84) w5 = -w5                    ; frame1: R5_w=scalar()
+276: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+277: (dc) r6 = be32 r6                ; frame1: R6_w=scalar()
+278: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+279: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+280: (b7) r0 = 0                      ; frame1: R0_w=0
+281: (b7) r0 = 0                      ; frame1: R0_w=0
+282: (95) exit
+returning from callee:
+ frame1: R0_w=0 R1=ctx(off=0,imm=0) R2_w=scalar() R3_w=scalar() R4=ctx(off=0,imm=0) R5_w=scalar() R6_w=scalar() R7_w=scalar() R8_w=scalar() R9_w=scalar(umax=3,var_off=(0x0; 0x3)) R10=fp0
+to caller at 8:
+ R0_w=0 R10=fp0 fp-448=ctx
+
+from 282 to 8: R0=0 R10=fp0 fp-448=ctx
+8: (79) r1 = *(u64 *)(r10 -448)       ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448=ctx
+9: (bf) r2 = r0                       ; R0=0 R2_w=0
+10: (0f) r2 += r0                     ; R0=0 R2_w=0
+11: (bf) r8 = r10                     ; R8_w=fp0 R10=fp0
+12: (bf) r9 = r2                      ; R2_w=0 R9_w=0
+13: (87) r9 = -r9                     ; R9_w=scalar()
+14: (97) r9 %= 864171779              ; R9_w=scalar()
+15: (74) w0 >>= 25                    ; R0_w=0
+16: (b7) r2 = 32                      ; R2_w=32
+17: (7f) r2 >>= r2                    ; R2_w=0
+18: (b4) w9 = 9                       ; R9_w=9
+19: (6c) w2 <<= w9                    ; R2_w=0 R9_w=9
+20: (54) w2 &= 1526007509             ; R2_w=0
+21: (04) w9 += 667388159              ; R9_w=667388168
+22: (14) w2 -= -123031633             ; R2_w=123031633
+23: (64) w9 <<= 13                    ; R9_w=4045471744
+24: (bc) w5 = w2                      ; R2_w=123031633 R5_w=123031633
+25: (dc) r5 = be64 r5                 ; R5_w=scalar()
+26: (34) w5 /= -1698737453            ; R5_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+27: (bc) w4 = w2                      ; R2_w=123031633 R4_w=123031633
+28: (dc) r4 = be16 r4                 ; R4_w=scalar()
+29: (bf) r3 = r8                      ; R3_w=fp0 R8_w=fp0
+30: (62) *(u32 *)(r3 -280) = 1268359523       ; R3_w=fp0 fp-280=1268359523
+31: (07) r2 += 1736005113             ; R2_w=1859036746
+32: (87) r0 = -r0                     ; R0_w=scalar()
+33: (84) w5 = -w5                     ; R5_w=scalar()
+34: (6a) *(u16 *)(r10 -372) = 732541503       ; R10=fp0 fp-376=??mm????
+35: (74) w4 >>= 0                     ; R4_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+36: (bc) w0 = w5                      ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R5_w=scalar()
+37: (b4) w0 = -172540521              ; R0_w=4122426775
+38: (bc) w0 = w2                      ; R0_w=1859036746 R2_w=1859036746
+39: (84) w9 = -w9                     ; R9_w=scalar()
+40: (bc) w8 = w4                      ; R4_w=scalar(id=1,umax=4294967295,var_off=(0x0; 0xffffffff)) R8_w=scalar(id=1,umax=4294967295,var_off=(0x0; 0xffffffff))
+41: (d4) r8 = le32 r8                 ; R8_w=scalar()
+42: (dc) r5 = be32 r5                 ; R5_w=scalar()
+43: (7b) *(u64 *)(r10 -448) = r1      ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+44: (7b) *(u64 *)(r10 -456) = r2      ; R2_w=1859036746 R10=fp0 fp-456_w=1859036746
+45: (7b) *(u64 *)(r10 -464) = r3      ; R3_w=fp0 R10=fp0 fp-464_w=fp
+46: (7b) *(u64 *)(r10 -472) = r4      ; R4_w=scalar(id=1,umax=4294967295,var_off=(0x0; 0xffffffff)) R10=fp0 fp-472_w=
+47: (7b) *(u64 *)(r10 -480) = r5      ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+48: (bf) r2 = r1                      ; R1_w=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+49: (bf) r3 = r1                      ; R1_w=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0)
+50: (bf) r4 = r1                      ; R1=ctx(off=0,imm=0) R4=ctx(off=0,imm=0)
+51: (85) call pc+189
+caller:
+ R8=scalar() R9=scalar() R10=fp0 fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=1859036746 fp-464=fp fp-472= fp-480=mmmmmmmm
+callee:
+ frame1: R1=ctx(off=0,imm=0) R2=ctx(off=0,imm=0) R3=ctx(off=0,imm=0) R4=ctx(off=0,imm=0) R5=scalar() R10=fp0
+241: frame1:
+241: (b7) r7 = -1634332253            ; frame1: R7_w=-1634332253
+242: (77) r7 >>= 10                   ; frame1: R7_w=18014398507885956
+243: (bc) w6 = w7                     ; frame1: R6_w=4293371268 R7_w=18014398507885956
+244: (27) r7 *= -1298270869           ; frame1: R7_w=6541298735600468524
+245: (87) r6 = -r6                    ; frame1: R6_w=scalar()
+246: (a4) w6 ^= 319035929             ; frame1: R6_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+247: (24) w7 *= -1227960499           ; frame1: R7_w=1582938940
+248: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+249: (bf) r6 = r10                    ; frame1: R6_w=fp0 R10=fp0
+250: (bc) w2 = w7                     ; frame1: R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R7_w=scalar()
+251: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+252: (dc) r2 = be16 r2                ; frame1: R2_w=scalar()
+253: (47) r7 |= -1172190071           ; frame1: R7_w=scalar(umin=18446744072537361545,var_off=(0xffffffffba21cc89; 0x45de3376),u32_min=-1172190071)
+254: (14) w7 -= 2007565469            ; frame1: R7_w=scalar(umin=1115211756,umax=2287401826,var_off=(0xc000; 0xcffe3ffe),s32_min=-2147434496,s32_max=1342111742)
+255: (37) r2 /= -643750851            ; frame1: R2_w=scalar()
+256: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+257: (44) w7 |= 2106886615            ; frame1: R7_w=scalar(umin=2106886615,umax=4294967295,var_off=(0x7d9489d7; 0x826b7628),s32_min=-40597033)
+258: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+259: (b7) r5 = -263441571             ; frame1: R5_w=-263441571
+260: (bf) r3 = r5                     ; frame1: R3_w=-263441571 R5_w=-263441571
+261: (bf) r6 = r3                     ; frame1: R3_w=-263441571 R6_w=-263441571
+262: (b7) r5 = 56                     ; frame1: R5_w=56
+263: (6f) r6 <<= r5                   ; frame1: R5_w=56 R6_w=6701356245527298048
+264: (bc) w8 = w7                     ; frame1: R7_w=scalar() R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+265: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+266: (b4) w7 = -450841245             ; frame1: R7_w=3844126051
+267: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+268: (b7) r9 = -317194555             ; frame1: R9_w=-317194555
+269: (87) r9 = -r9                    ; frame1: R9_w=scalar()
+270: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+271: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+272: (17) r5 -= -1188531907           ; frame1: R5_w=1188531963
+273: (dc) r7 = be32 r7                ; frame1: R7_w=scalar()
+274: (74) w9 >>= 30                   ; frame1: R9_w=scalar(umax=3,var_off=(0x0; 0x3))
+275: (84) w5 = -w5                    ; frame1: R5_w=scalar()
+276: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+277: (dc) r6 = be32 r6                ; frame1: R6_w=scalar()
+278: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+279: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+280: (b7) r0 = 0                      ; frame1: R0_w=0
+281: (b7) r0 = 0                      ; frame1: R0_w=0
+282: (95) exit
+returning from callee:
+ frame1: R0_w=0 R1=ctx(off=0,imm=0) R2_w=scalar() R3_w=scalar() R4=ctx(off=0,imm=0) R5_w=scalar() R6_w=scalar() R7_w=scalar() R8_w=scalar() R9_w=scalar(umax=3,var_off=(0x0; 0x3)) R10=fp0
+to caller at 52:
+ R0_w=0 R8=scalar() R9=scalar() R10=fp0 fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=1859036746 fp-464=fp fp-472= fp-480=mmmmmmmm
+
+from 282 to 52: R0=0 R8=scalar() R9=scalar() R10=fp0 fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=1859036746 fp-464=fp fp-472= fp-480=mmmmmmmm
+52: (79) r1 = *(u64 *)(r10 -448)      ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448=ctx
+53: (79) r2 = *(u64 *)(r10 -456)      ; R2_w=1859036746 R10=fp0 fp-456=1859036746
+54: (79) r3 = *(u64 *)(r10 -464)      ; R3_w=fp0 R10=fp0 fp-464=fp
+55: (79) r4 = *(u64 *)(r10 -472)      ; R4_w=scalar(id=1,umax=4294967295,var_off=(0x0; 0xffffffff)) R10=fp0 fp-472=
+56: (79) r5 = *(u64 *)(r10 -480)      ; R5_w=scalar() R10=fp0 fp-480=mmmmmmmm
+57: (84) w4 = -w4                     ; R4_w=scalar()
+58: (b4) w5 = 24                      ; R5_w=24
+59: (7c) w4 >>= w5                    ; R4_w=scalar(umax=255,var_off=(0x0; 0xff)) R5_w=24
+60: (84) w5 = -w5                     ; R5_w=scalar()
+61: (07) r0 += 1584260119             ; R0_w=1584260119
+62: (77) r8 >>= 13                    ; R8_w=scalar(umax=2251799813685247,var_off=(0x0; 0x7ffffffffffff))
+63: (24) w9 *= 984970359              ; R9_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+64: (6a) *(u16 *)(r10 -102) = -1878141623     ; R10=fp0 fp-104=????mm??
+65: (84) w4 = -w4                     ; R4_w=scalar()
+66: (d4) r4 = le32 r4                 ; R4_w=scalar()
+67: (dc) r8 = be16 r8                 ; R8_w=scalar()
+68: (64) w8 <<= 25                    ; R8_w=scalar(umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216)
+69: (dc) r9 = be64 r9                 ; R9_w=scalar()
+70: (87) r4 = -r4                     ; R4_w=scalar()
+71: (54) w2 &= -644561331             ; R2_w=1216644680
+72: (b4) w3 = -357832349              ; R3_w=3937134947
+73: (54) w3 &= 731970099              ; R3_w=715188259
+74: (dc) r9 = be32 r9                 ; R9_w=scalar()
+75: (dc) r2 = be32 r2                 ; R2_w=scalar()
+76: (dc) r4 = be16 r4                 ; R4_w=scalar()
+77: (bf) r0 = r3                      ; R0_w=715188259 R3_w=715188259
+78: (bf) r0 = r8                      ; R0=scalar(id=2,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R8=scalar(id=2,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216)
+79: (25) if r0 > 0x5245a955 goto pc+80        ; R0=scalar(id=2,umax=1380297045,var_off=(0x0; 0x7e000000))
+80: (7b) *(u64 *)(r10 -448) = r1      ; R1=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+81: (7b) *(u64 *)(r10 -456) = r2      ; R2=scalar() R10=fp0 fp-456_w=mmmmmmmm
+82: (7b) *(u64 *)(r10 -464) = r3      ; R3=715188259 R10=fp0 fp-464_w=715188259
+83: (7b) *(u64 *)(r10 -472) = r4      ; R4=scalar() R10=fp0 fp-472_w=mmmmmmmm
+84: (7b) *(u64 *)(r10 -480) = r5      ; R5=scalar() R10=fp0 fp-480_w=mmmmmmmm
+85: (bf) r2 = r1                      ; R1=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+86: (bf) r3 = r1                      ; R1=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0)
+87: (bf) r4 = r1                      ; R1=ctx(off=0,imm=0) R4=ctx(off=0,imm=0)
+88: (85) call pc+152
+caller:
+ R8=scalar(id=2,umax=1380297045,var_off=(0x0; 0x7e000000)) R9=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=mmmmmmmm fp-464=715188259 fp-472=mmmmmmmm fp-480=mmmmmmmm
+callee:
+ frame1: R1=ctx(off=0,imm=0) R2=ctx(off=0,imm=0) R3=ctx(off=0,imm=0) R4=ctx(off=0,imm=0) R5=scalar() R10=fp0
+241: frame1:
+241: (b7) r7 = -1634332253            ; frame1: R7_w=-1634332253
+242: (77) r7 >>= 10                   ; frame1: R7_w=18014398507885956
+243: (bc) w6 = w7                     ; frame1: R6_w=4293371268 R7_w=18014398507885956
+244: (27) r7 *= -1298270869           ; frame1: R7_w=6541298735600468524
+245: (87) r6 = -r6                    ; frame1: R6_w=scalar()
+246: (a4) w6 ^= 319035929             ; frame1: R6_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+247: (24) w7 *= -1227960499           ; frame1: R7_w=1582938940
+248: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+249: (bf) r6 = r10                    ; frame1: R6_w=fp0 R10=fp0
+250: (bc) w2 = w7                     ; frame1: R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R7_w=scalar()
+251: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+252: (dc) r2 = be16 r2                ; frame1: R2_w=scalar()
+253: (47) r7 |= -1172190071           ; frame1: R7_w=scalar(umin=18446744072537361545,var_off=(0xffffffffba21cc89; 0x45de3376),u32_min=-1172190071)
+254: (14) w7 -= 2007565469            ; frame1: R7_w=scalar(umin=1115211756,umax=2287401826,var_off=(0xc000; 0xcffe3ffe),s32_min=-2147434496,s32_max=1342111742)
+255: (37) r2 /= -643750851            ; frame1: R2_w=scalar()
+256: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+257: (44) w7 |= 2106886615            ; frame1: R7_w=scalar(umin=2106886615,umax=4294967295,var_off=(0x7d9489d7; 0x826b7628),s32_min=-40597033)
+258: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+259: (b7) r5 = -263441571             ; frame1: R5_w=-263441571
+260: (bf) r3 = r5                     ; frame1: R3_w=-263441571 R5_w=-263441571
+261: (bf) r6 = r3                     ; frame1: R3_w=-263441571 R6_w=-263441571
+262: (b7) r5 = 56                     ; frame1: R5_w=56
+263: (6f) r6 <<= r5                   ; frame1: R5_w=56 R6_w=6701356245527298048
+264: (bc) w8 = w7                     ; frame1: R7_w=scalar() R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+265: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+266: (b4) w7 = -450841245             ; frame1: R7_w=3844126051
+267: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+268: (b7) r9 = -317194555             ; frame1: R9_w=-317194555
+269: (87) r9 = -r9                    ; frame1: R9_w=scalar()
+270: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+271: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+272: (17) r5 -= -1188531907           ; frame1: R5_w=1188531963
+273: (dc) r7 = be32 r7                ; frame1: R7_w=scalar()
+274: (74) w9 >>= 30                   ; frame1: R9_w=scalar(umax=3,var_off=(0x0; 0x3))
+275: (84) w5 = -w5                    ; frame1: R5_w=scalar()
+276: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+277: (dc) r6 = be32 r6                ; frame1: R6_w=scalar()
+278: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+279: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+280: (b7) r0 = 0                      ; frame1: R0_w=0
+281: (b7) r0 = 0                      ; frame1: R0_w=0
+282: (95) exit
+returning from callee:
+ frame1: R0_w=0 R1=ctx(off=0,imm=0) R2_w=scalar() R3_w=scalar() R4=ctx(off=0,imm=0) R5_w=scalar() R6_w=scalar() R7_w=scalar() R8_w=scalar() R9_w=scalar(umax=3,var_off=(0x0; 0x3)) R10=fp0
+to caller at 89:
+ R0_w=0 R8=scalar(id=2,umax=1380297045,var_off=(0x0; 0x7e000000)) R9=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=mmmmmmmm fp-464=715188259 fp-472=mmmmmmmm fp-480=mmmmmmmm
+
+from 282 to 89: R0=0 R8=scalar(id=2,umax=1380297045,var_off=(0x0; 0x7e000000)) R9=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=mmmmmmmm fp-464=715188259 fp-472=mmmmmmmm fp-480=mmmmmmmm
+89: (79) r1 = *(u64 *)(r10 -448)      ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448=ctx
+90: (79) r2 = *(u64 *)(r10 -456)      ; R2_w=scalar() R10=fp0 fp-456=mmmmmmmm
+91: (79) r3 = *(u64 *)(r10 -464)      ; R3_w=715188259 R10=fp0 fp-464=715188259
+92: (79) r4 = *(u64 *)(r10 -472)      ; R4_w=scalar() R10=fp0 fp-472=mmmmmmmm
+93: (79) r5 = *(u64 *)(r10 -480)      ; R5_w=scalar() R10=fp0 fp-480=mmmmmmmm
+94: (84) w4 = -w4                     ; R4_w=scalar()
+95: (84) w2 = -w2                     ; R2_w=scalar()
+96: (2c) w3 *= w0                     ; R0=0 R3_w=0
+97: (07) r9 += -283230607             ; R9_w=scalar()
+98: (84) w0 = -w0                     ; R0_w=scalar()
+99: (84) w4 = -w4                     ; R4_w=scalar()
+100: (87) r8 = -r8                    ; R8_w=scalar()
+101: (84) w8 = -w8                    ; R8_w=scalar()
+102: (b7) r6 = -1077562289            ; R6_w=-1077562289
+103: (37) r3 /= 1958352917            ; R3_w=scalar()
+104: (34) w2 /= -138172731            ; R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+105: (a7) r4 ^= 1974328255            ; R4_w=scalar()
+106: (dc) r5 = be32 r5                ; R5_w=scalar()
+107: (44) w2 |= 24398385              ; R2_w=scalar(umin=24398385,umax=4294967295,var_off=(0x1744a31; 0xfe8bb5ce),s32_min=-2123085263)
+108: (d4) r6 = le64 r6                ; R6_w=scalar()
+109: (4c) w4 |= w0                    ; R0_w=scalar() R4_w=scalar()
+110: (d4) r8 = le16 r8                ; R8_w=scalar()
+111: (84) w4 = -w4                    ; R4_w=scalar()
+112: (74) w3 >>= 2                    ; R3_w=scalar(umax=1073741823,var_off=(0x0; 0x3fffffff))
+113: (87) r8 = -r8                    ; R8_w=scalar()
+114: (dc) r4 = be32 r4                ; R4_w=scalar()
+115: (1c) w9 -= w0                    ; R0_w=scalar() R9_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+116: (77) r6 >>= 46                   ; R6_w=scalar(umax=262143,var_off=(0x0; 0x3ffff))
+117: (bf) r0 = r8                     ; R0_w=scalar(id=3) R8_w=scalar(id=3)
+118: (bf) r0 = r0                     ; R0_w=scalar(id=3)
+119: (bf) r0 = r5                     ; R0=scalar(id=4) R5=scalar(id=4)
+120: (84) w8 = -w8                    ; R8_w=scalar()
+121: (84) w3 = -w3                    ; R3_w=scalar()
+122: (7b) *(u64 *)(r10 -448) = r1     ; R1=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+123: (7b) *(u64 *)(r10 -464) = r3     ; R3_w=scalar() R10=fp0 fp-464_w=mmmmmmmm
+124: (7b) *(u64 *)(r10 -480) = r5     ; R5=scalar(id=4) R10=fp0 fp-480_w=mmmmmmmm
+125: (85) call bpf_ktime_get_boot_ns#125      ; R0=scalar()
+126: (79) r1 = *(u64 *)(r10 -448)     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448=ctx
+127: (79) r3 = *(u64 *)(r10 -464)     ; R3_w=scalar() R10=fp0 fp-464=mmmmmmmm
+128: (79) r5 = *(u64 *)(r10 -480)     ; R5_w=scalar() R10=fp0 fp-480=mmmmmmmm
+129: (bf) r9 = r10                    ; R9_w=fp0 R10=fp0
+130: (6a) *(u16 *)(r9 -118) = 1792337465      ; R9_w=fp0 fp-120=????mm??
+131: (dc) r5 = be32 r5                ; R5_w=scalar()
+132: (87) r0 = -r0                    ; R0_w=scalar()
+133: (dc) r6 = be16 r6                ; R6_w=scalar()
+134: (b7) r8 = 784369781              ; R8_w=784369781
+135: (87) r8 = -r8                    ; R8_w=scalar()
+136: (bf) r8 = r10                    ; R8_w=fp0 R10=fp0
+137: (62) *(u32 *)(r8 -304) = 1604498515      ; R8_w=fp0 fp-304=1604498515
+138: (64) w5 <<= 26                   ; R5_w=scalar(umax=4227858432,var_off=(0x0; 0xfc000000),s32_max=2080374784)
+139: (87) r6 = -r6                    ; R6_w=scalar()
+140: (87) r3 = -r3                    ; R3_w=scalar()
+141: (c3) r0 = atomic_cmpxchg((u32 *)(r8 -472), r0, r9)       ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R8_w=fp0 R9_w=fp0 fp-472=mmmmmmmm
+142: (dc) r3 = be16 r3                ; R3_w=scalar()
+143: (dc) r6 = be32 r6                ; R6_w=scalar()
+144: (84) w5 = -w5                    ; R5_w=scalar()
+145: (84) w3 = -w3                    ; R3_w=scalar()
+146: (bf) r2 = r3                     ; R2_w=scalar(id=5) R3_w=scalar(id=5)
+147: (97) r2 %= 707802403             ; R2_w=scalar()
+148: (dc) r9 = be64 r9                ; R9_w=scalar()
+149: (4c) w6 |= w0                    ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R6_w=scalar()
+150: (bc) w7 = w5                     ; R5_w=scalar() R7_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+151: (84) w7 = -w7                    ; R7_w=scalar()
+152: (dc) r9 = be32 r9                ; R9_w=scalar()
+153: (87) r6 = -r6                    ; R6_w=scalar()
+154: (97) r7 %= -992305235            ; R7_w=scalar()
+155: (bc) w4 = w3                     ; R3_w=scalar(id=5) R4_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+156: (87) r0 = -r0                    ; R0_w=scalar()
+157: (b7) r0 = 0                      ; R0_w=0
+158: (b7) r0 = 0                      ; R0_w=0
+159: (95) exit
+
+from 79 to 160: R0=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R1=ctx(off=0,imm=0) R2=scalar() R3=715188259 R4=scalar() R5=scalar() R8=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R9=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=1859036746 fp-464=fp fp-472= fp-480=mmmmmmmm
+160: (7b) *(u64 *)(r10 -448) = r1     ; R1=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+161: (7b) *(u64 *)(r10 -456) = r2     ; R2=scalar() R10=fp0 fp-456_w=mmmmmmmm
+162: (7b) *(u64 *)(r10 -464) = r3     ; R3=715188259 R10=fp0 fp-464_w=715188259
+163: (7b) *(u64 *)(r10 -472) = r4     ; R4=scalar() R10=fp0 fp-472_w=mmmmmmmm
+164: (7b) *(u64 *)(r10 -480) = r5     ; R5=scalar() R10=fp0 fp-480_w=mmmmmmmm
+165: (bf) r2 = r1                     ; R1=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+166: (bf) r3 = r1                     ; R1=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0)
+167: (bf) r4 = r1                     ; R1=ctx(off=0,imm=0) R4=ctx(off=0,imm=0)
+168: (85) call pc+72
+caller:
+ R8=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R9=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=mmmmmmmm fp-464=715188259 fp-472=mmmmmmmm fp-480=mmmmmmmm
+callee:
+ frame1: R1=ctx(off=0,imm=0) R2=ctx(off=0,imm=0) R3=ctx(off=0,imm=0) R4=ctx(off=0,imm=0) R5=scalar() R10=fp0
+241: frame1:
+241: (b7) r7 = -1634332253            ; frame1: R7_w=-1634332253
+242: (77) r7 >>= 10                   ; frame1: R7_w=18014398507885956
+243: (bc) w6 = w7                     ; frame1: R6_w=4293371268 R7_w=18014398507885956
+244: (27) r7 *= -1298270869           ; frame1: R7_w=6541298735600468524
+245: (87) r6 = -r6                    ; frame1: R6_w=scalar()
+246: (a4) w6 ^= 319035929             ; frame1: R6_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+247: (24) w7 *= -1227960499           ; frame1: R7_w=1582938940
+248: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+249: (bf) r6 = r10                    ; frame1: R6_w=fp0 R10=fp0
+250: (bc) w2 = w7                     ; frame1: R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R7_w=scalar()
+251: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+252: (dc) r2 = be16 r2                ; frame1: R2_w=scalar()
+253: (47) r7 |= -1172190071           ; frame1: R7_w=scalar(umin=18446744072537361545,var_off=(0xffffffffba21cc89; 0x45de3376),u32_min=-1172190071)
+254: (14) w7 -= 2007565469            ; frame1: R7_w=scalar(umin=1115211756,umax=2287401826,var_off=(0xc000; 0xcffe3ffe),s32_min=-2147434496,s32_max=1342111742)
+255: (37) r2 /= -643750851            ; frame1: R2_w=scalar()
+256: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+257: (44) w7 |= 2106886615            ; frame1: R7_w=scalar(umin=2106886615,umax=4294967295,var_off=(0x7d9489d7; 0x826b7628),s32_min=-40597033)
+258: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+259: (b7) r5 = -263441571             ; frame1: R5_w=-263441571
+260: (bf) r3 = r5                     ; frame1: R3_w=-263441571 R5_w=-263441571
+261: (bf) r6 = r3                     ; frame1: R3_w=-263441571 R6_w=-263441571
+262: (b7) r5 = 56                     ; frame1: R5_w=56
+263: (6f) r6 <<= r5                   ; frame1: R5_w=56 R6_w=6701356245527298048
+264: (bc) w8 = w7                     ; frame1: R7_w=scalar() R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+265: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+266: (b4) w7 = -450841245             ; frame1: R7_w=3844126051
+267: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+268: (b7) r9 = -317194555             ; frame1: R9_w=-317194555
+269: (87) r9 = -r9                    ; frame1: R9_w=scalar()
+270: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+271: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+272: (17) r5 -= -1188531907           ; frame1: R5_w=1188531963
+273: (dc) r7 = be32 r7                ; frame1: R7_w=scalar()
+274: (74) w9 >>= 30                   ; frame1: R9_w=scalar(umax=3,var_off=(0x0; 0x3))
+275: (84) w5 = -w5                    ; frame1: R5_w=scalar()
+276: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+277: (dc) r6 = be32 r6                ; frame1: R6_w=scalar()
+278: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+279: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+280: (b7) r0 = 0                      ; frame1: R0_w=0
+281: (b7) r0 = 0                      ; frame1: R0_w=0
+282: (95) exit
+returning from callee:
+ frame1: R0_w=0 R1=ctx(off=0,imm=0) R2_w=scalar() R3_w=scalar() R4=ctx(off=0,imm=0) R5_w=scalar() R6_w=scalar() R7_w=scalar() R8_w=scalar() R9_w=scalar(umax=3,var_off=(0x0; 0x3)) R10=fp0
+to caller at 169:
+ R0_w=0 R8=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R9=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=mmmmmmmm fp-464=715188259 fp-472=mmmmmmmm fp-480=mmmmmmmm
+
+from 282 to 169: R0=0 R8=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R9=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448=ctx fp-456=mmmmmmmm fp-464=715188259 fp-472=mmmmmmmm fp-480=mmmmmmmm
+169: (79) r1 = *(u64 *)(r10 -448)     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448=ctx
+170: (79) r2 = *(u64 *)(r10 -456)     ; R2_w=scalar() R10=fp0 fp-456=mmmmmmmm
+171: (79) r3 = *(u64 *)(r10 -464)     ; R3_w=715188259 R10=fp0 fp-464=715188259
+172: (79) r4 = *(u64 *)(r10 -472)     ; R4_w=scalar() R10=fp0 fp-472=mmmmmmmm
+173: (79) r5 = *(u64 *)(r10 -480)     ; R5_w=scalar() R10=fp0 fp-480=mmmmmmmm
+174: (84) w8 = -w8                    ; R8_w=scalar()
+175: (84) w4 = -w4                    ; R4_w=scalar()
+176: (bf) r4 = r10                    ; R4_w=fp0 R10=fp0
+177: (bc) w4 = w2                     ; R2_w=scalar() R4_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+178: (87) r5 = -r5                    ; R5_w=scalar()
+179: (87) r4 = -r4                    ; R4_w=scalar()
+180: (17) r9 -= -1402752955           ; R9_w=scalar()
+181: (dc) r8 = be16 r8                ; R8_w=scalar()
+182: (6a) *(u16 *)(r10 -140) = 1905575639     ; R10=fp0 fp-144=??mm????
+183: (27) r0 *= 1730856339            ; R0_w=0
+184: (87) r0 = -r0                    ; R0_w=scalar()
+185: (62) *(u32 *)(r10 -356) = -553631901     ; R10=fp0 fp-360=mmmm????
+186: (04) w8 += -1286340911           ; R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+187: (bf) r2 = r1                     ; R1_w=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+188: (d4) r9 = le64 r9                ; R9_w=scalar()
+189: (a7) r5 ^= -1704449187           ; R5_w=scalar()
+190: (b7) r8 = 1035764835             ; R8_w=1035764835
+191: (87) r5 = -r5                    ; R5_w=scalar()
+192: (84) w0 = -w0                    ; R0_w=scalar()
+193: (dc) r5 = be16 r5                ; R5_w=scalar()
+194: (0c) w0 += w0                    ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+195: (bc) w6 = w8                     ; R6_w=1035764835 R8_w=1035764835
+196: (dc) r9 = be16 r9                ; R9_w=scalar()
+197: (62) *(u32 *)(r10 -292) = -283757609     ; R10=fp0 fp-296=mmmm????
+198: (bf) r0 = r8                     ; R0_w=1035764835 R8_w=1035764835
+199: (bf) r0 = r5                     ; R0=scalar(id=6) R5=scalar(id=6)
+200: (5d) if r0 != r0 goto pc-81      ; R0=scalar(id=6)
+201: (bf) r2 = r5                     ; R2_w=scalar(id=6) R5=scalar(id=6)
+202: (87) r2 = -r2                    ; R2_w=scalar()
+203: (a7) r0 ^= -1610080341           ; R0_w=scalar()
+204: (bf) r4 = r1                     ; R1=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0)
+205: (7b) *(u64 *)(r10 -448) = r1     ; R1=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+206: (7b) *(u64 *)(r10 -456) = r2     ; R2_w=scalar() R10=fp0 fp-456_w=mmmmmmmm
+207: (7b) *(u64 *)(r10 -464) = r3     ; R3=715188259 R10=fp0 fp-464_w=715188259
+208: (7b) *(u64 *)(r10 -472) = r4     ; R4_w=ctx(off=0,imm=0) R10=fp0 fp-472_w=ctx
+209: (7b) *(u64 *)(r10 -480) = r5     ; R5=scalar(id=6) R10=fp0 fp-480_w=mmmmmmmm
+210: (85) call bpf_get_current_task#35        ; R0=scalar()
+211: (79) r1 = *(u64 *)(r10 -448)     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448=ctx
+212: (79) r2 = *(u64 *)(r10 -456)     ; R2_w=scalar() R10=fp0 fp-456=mmmmmmmm
+213: (79) r3 = *(u64 *)(r10 -464)     ; R3_w=715188259 R10=fp0 fp-464=715188259
+214: (79) r4 = *(u64 *)(r10 -472)     ; R4_w=ctx(off=0,imm=0) R10=fp0 fp-472=ctx
+215: (79) r5 = *(u64 *)(r10 -480)     ; R5_w=scalar() R10=fp0 fp-480=mmmmmmmm
+216: (a7) r8 ^= -1787378541           ; R8_w=-1463140112
+217: (dc) r6 = be16 r6                ; R6_w=scalar()
+218: (87) r9 = -r9                    ; R9_w=scalar()
+219: (87) r0 = -r0                    ; R0_w=scalar()
+220: (b7) r8 = 28                     ; R8_w=28
+221: (6f) r9 <<= r8                   ; R8_w=28 R9_w=scalar(smax=9223372036586340352,umax=18446744073441116160,var_off=(0x0; 0xfffffffff0000000),s32_max=1879048192,u32_max=-268435456)
+222: (84) w3 = -w3                    ; R3_w=scalar()
+223: (44) w0 |= 2024023593            ; R0_w=scalar(umin=2024023593,umax=4294967295,var_off=(0x78a42629; 0x875bd9d6),s32_min=-123460055)
+224: (84) w9 = -w9                    ; R9_w=scalar()
+225: (87) r8 = -r8                    ; R8_w=scalar()
+226: (64) w8 <<= 21                   ; R8_w=scalar(umax=4292870144,var_off=(0x0; 0xffe00000),s32_max=2145386496)
+227: (dc) r6 = be16 r6                ; R6_w=scalar()
+228: (dc) r5 = be32 r5                ; R5_w=scalar()
+229: (dc) r9 = be16 r9                ; R9_w=scalar()
+230: (87) r5 = -r5                    ; R5_w=scalar()
+231: (44) w9 |= -1345566149           ; R9_w=scalar(umin=2949401147,umax=4294967295,var_off=(0xafcc4a3b; 0x5033b5c4),s32_min=-1345566149,s32_max=-1)
+232: (87) r2 = -r2                    ; R2_w=scalar()
+233: (dc) r6 = be32 r6                ; R6_w=scalar()
+234: (34) w8 /= -1628368419           ; R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+235: (1f) r0 -= r0                    ; R0_w=scalar(smin=-2270943702,smax=2270943702,umax=18446744073709551614,var_off=(0x0; 0xfffffffffffffffe),s32_max=2147483646,u32_max=-2)
+236: (74) w3 >>= 7                    ; R3_w=scalar(umax=33554431,var_off=(0x0; 0x1ffffff))
+237: (87) r3 = -r3                    ; R3_w=scalar()
+238: (bc) w0 = w5                     ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R5_w=scalar()
+239: (bc) w0 = w2                     ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R2_w=scalar()
+240: (05) goto pc-121
+120: safe
+
+from 200 to 120: safe
+processed 411 insns (limit 1000000) max_states_per_insn 1 total_states 18 peak_states 18 mark_read 4
+
+eBPF verifier log:
+func#0 @0
+func#1 @241
+0: R1=ctx(off=0,imm=0) R10=fp0
+0: (b7) r0 = -20513793                ; R0_w=-20513793
+1: (1f) r0 -= r0                      ; R0_w=0
+2: (94) w0 %= 239712941               ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+3: (7b) *(u64 *)(r10 -448) = r1       ; R1=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+4: (bf) r2 = r1                       ; R1=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+5: (bf) r3 = r1                       ; R1=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0)
+6: (bf) r4 = r1                       ; R1=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0)
+7: (85) call pc+233
+caller:
+ R10=fp0 fp-448_w=ctx
+callee:
+ frame1: R1=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0) R10=fp0
+241: frame1:
+241: (b7) r7 = -1634332253            ; frame1: R7_w=-1634332253
+242: (77) r7 >>= 10                   ; frame1: R7_w=18014398507885956
+243: (bc) w6 = w7                     ; frame1: R6_w=4293371268 R7_w=18014398507885956
+244: (27) r7 *= -1298270869           ; frame1: R7_w=6541298735600468524
+245: (87) r6 = -r6                    ; frame1: R6_w=scalar()
+246: (a4) w6 ^= 319035929             ; frame1: R6_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+247: (24) w7 *= -1227960499           ; frame1: R7_w=1582938940
+248: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+249: (bf) r6 = r10                    ; frame1: R6_w=fp0 R10=fp0
+250: (bc) w2 = w7                     ; frame1: R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R7_w=scalar()
+251: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+252: (dc) r2 = be16 r2                ; frame1: R2_w=scalar()
+253: (47) r7 |= -1172190071           ; frame1: R7_w=scalar(umin=18446744072537361545,var_off=(0xffffffffba21cc89; 0x45de3376),u32_min=-1172190071)
+254: (14) w7 -= 2007565469            ; frame1: R7_w=scalar(umin=1115211756,umax=2287401826,var_off=(0xc000; 0xcffe3ffe),s32_min=-2147434496,s32_max=1342111742)
+255: (37) r2 /= -643750851            ; frame1: R2_w=scalar()
+256: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+257: (44) w7 |= 2106886615            ; frame1: R7_w=scalar(umin=2106886615,umax=4294967295,var_off=(0x7d9489d7; 0x826b7628),s32_min=-40597033)
+258: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+259: (b7) r5 = -263441571             ; frame1: R5_w=-263441571
+260: (bf) r3 = r5                     ; frame1: R3_w=-263441571 R5_w=-263441571
+261: (bf) r6 = r3                     ; frame1: R3_w=-263441571 R6_w=-263441571
+262: (b7) r5 = 56                     ; frame1: R5_w=56
+263: (6f) r6 <<= r5                   ; frame1: R5_w=56 R6_w=6701356245527298048
+264: (bc) w8 = w7                     ; frame1: R7_w=scalar() R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+265: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+266: (b4) w7 = -450841245             ; frame1: R7_w=3844126051
+267: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+268: (b7) r9 = -317194555             ; frame1: R9_w=-317194555
+269: (87) r9 = -r9                    ; frame1: R9_w=scalar()
+270: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+271: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+272: (17) r5 -= -1188531907           ; frame1: R5_w=1188531963
+273: (dc) r7 = be32 r7                ; frame1: R7_w=scalar()
+274: (74) w9 >>= 30                   ; frame1: R9_w=scalar(umax=3,var_off=(0x0; 0x3))
+275: (84) w5 = -w5                    ; frame1: R5_w=scalar()
+276: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+277: (dc) r6 = be32 r6                ; frame1: R6_w=scalar()
+278: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+279: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+280: (b7) r0 = 0                      ; frame1: R0_w=0
+281: (b7) r0 = 0                      ; frame1: R0_w=0
+282: (95) exit
+returning from callee:
+ frame1: R0_w=0 R1=ctx(off=0,imm=0) R2_w=scalar() R3_w=scalar() R4_w=ctx(off=0,imm=0) R5_w=scalar() R6_w=scalar() R7_w=scalar() R8_w=scalar() R9_w=scalar(umax=3,var_off=(0x0; 0x3)) R10=fp0
+to caller at 8:
+ R0_w=0 R10=fp0 fp-448_w=ctx
+
+from 282 to 8: R0_w=0 R10=fp0 fp-448_w=ctx
+8: (79) r1 = *(u64 *)(r10 -448)       ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+9: (bf) r2 = r0                       ; R0_w=0 R2_w=0
+10: (0f) r2 += r0                     ; R0_w=0 R2_w=0
+11: (bf) r8 = r10                     ; R8_w=fp0 R10=fp0
+12: (bf) r9 = r2                      ; R2_w=0 R9_w=0
+13: (87) r9 = -r9                     ; R9_w=scalar()
+14: (97) r9 %= 864171779              ; R9_w=scalar()
+15: (74) w0 >>= 25                    ; R0_w=0
+16: (b7) r2 = 32                      ; R2_w=32
+17: (7f) r2 >>= r2                    ; R2_w=0
+18: (b4) w9 = 9                       ; R9_w=9
+19: (6c) w2 <<= w9                    ; R2_w=0 R9_w=9
+20: (54) w2 &= 1526007509             ; R2_w=0
+21: (04) w9 += 667388159              ; R9_w=667388168
+22: (14) w2 -= -123031633             ; R2_w=123031633
+23: (64) w9 <<= 13                    ; R9_w=4045471744
+24: (bc) w5 = w2                      ; R2_w=123031633 R5_w=123031633
+25: (dc) r5 = be64 r5                 ; R5_w=scalar()
+26: (34) w5 /= -1698737453            ; R5_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+27: (bc) w4 = w2                      ; R2_w=123031633 R4_w=123031633
+28: (dc) r4 = be16 r4                 ; R4_w=scalar()
+29: (bf) r3 = r8                      ; R3_w=fp0 R8_w=fp0
+30: (62) *(u32 *)(r3 -280) = 1268359523       ; R3_w=fp0 fp-280=1268359523
+31: (07) r2 += 1736005113             ; R2_w=1859036746
+32: (87) r0 = -r0                     ; R0_w=scalar()
+33: (84) w5 = -w5                     ; R5_w=scalar()
+34: (6a) *(u16 *)(r10 -372) = 732541503       ; R10=fp0 fp-376=??mm????
+35: (74) w4 >>= 0                     ; R4_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+36: (bc) w0 = w5                      ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R5_w=scalar()
+37: (b4) w0 = -172540521              ; R0_w=4122426775
+38: (bc) w0 = w2                      ; R0_w=1859036746 R2_w=1859036746
+39: (84) w9 = -w9                     ; R9_w=scalar()
+40: (bc) w8 = w4                      ; R4_w=scalar(id=1,umax=4294967295,var_off=(0x0; 0xffffffff)) R8_w=scalar(id=1,umax=4294967295,var_off=(0x0; 0xffffffff))
+41: (d4) r8 = le32 r8                 ; R8_w=scalar()
+42: (dc) r5 = be32 r5                 ; R5_w=scalar()
+43: (7b) *(u64 *)(r10 -448) = r1      ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+44: (7b) *(u64 *)(r10 -456) = r2      ; R2_w=1859036746 R10=fp0 fp-456_w=1859036746
+45: (7b) *(u64 *)(r10 -464) = r3      ; R3_w=fp0 R10=fp0 fp-464_w=fp
+46: (7b) *(u64 *)(r10 -472) = r4      ; R4_w=scalar(id=1,umax=4294967295,var_off=(0x0; 0xffffffff)) R10=fp0 fp-472_w=
+47: (7b) *(u64 *)(r10 -480) = r5      ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+48: (bf) r2 = r1                      ; R1_w=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+49: (bf) r3 = r1                      ; R1_w=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0)
+50: (bf) r4 = r1                      ; R1_w=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0)
+51: (85) call pc+189
+caller:
+ R8_w=scalar() R9_w=scalar() R10=fp0 fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=1859036746 fp-464_w=fp fp-472_w= fp-480_w=mmmmmmmm
+callee:
+ frame1: R1_w=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0) R5_w=scalar() R10=fp0
+241: frame1:
+241: (b7) r7 = -1634332253            ; frame1: R7_w=-1634332253
+242: (77) r7 >>= 10                   ; frame1: R7_w=18014398507885956
+243: (bc) w6 = w7                     ; frame1: R6_w=4293371268 R7_w=18014398507885956
+244: (27) r7 *= -1298270869           ; frame1: R7_w=6541298735600468524
+245: (87) r6 = -r6                    ; frame1: R6_w=scalar()
+246: (a4) w6 ^= 319035929             ; frame1: R6_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+247: (24) w7 *= -1227960499           ; frame1: R7_w=1582938940
+248: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+249: (bf) r6 = r10                    ; frame1: R6_w=fp0 R10=fp0
+250: (bc) w2 = w7                     ; frame1: R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R7_w=scalar()
+251: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+252: (dc) r2 = be16 r2                ; frame1: R2_w=scalar()
+253: (47) r7 |= -1172190071           ; frame1: R7_w=scalar(umin=18446744072537361545,var_off=(0xffffffffba21cc89; 0x45de3376),u32_min=-1172190071)
+254: (14) w7 -= 2007565469            ; frame1: R7_w=scalar(umin=1115211756,umax=2287401826,var_off=(0xc000; 0xcffe3ffe),s32_min=-2147434496,s32_max=1342111742)
+255: (37) r2 /= -643750851            ; frame1: R2_w=scalar()
+256: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+257: (44) w7 |= 2106886615            ; frame1: R7_w=scalar(umin=2106886615,umax=4294967295,var_off=(0x7d9489d7; 0x826b7628),s32_min=-40597033)
+258: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+259: (b7) r5 = -263441571             ; frame1: R5_w=-263441571
+260: (bf) r3 = r5                     ; frame1: R3_w=-263441571 R5_w=-263441571
+261: (bf) r6 = r3                     ; frame1: R3_w=-263441571 R6_w=-263441571
+262: (b7) r5 = 56                     ; frame1: R5_w=56
+263: (6f) r6 <<= r5                   ; frame1: R5_w=56 R6_w=6701356245527298048
+264: (bc) w8 = w7                     ; frame1: R7_w=scalar() R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+265: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+266: (b4) w7 = -450841245             ; frame1: R7_w=3844126051
+267: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+268: (b7) r9 = -317194555             ; frame1: R9_w=-317194555
+269: (87) r9 = -r9                    ; frame1: R9_w=scalar()
+270: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+271: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+272: (17) r5 -= -1188531907           ; frame1: R5_w=1188531963
+273: (dc) r7 = be32 r7                ; frame1: R7_w=scalar()
+274: (74) w9 >>= 30                   ; frame1: R9_w=scalar(umax=3,var_off=(0x0; 0x3))
+275: (84) w5 = -w5                    ; frame1: R5_w=scalar()
+276: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+277: (dc) r6 = be32 r6                ; frame1: R6_w=scalar()
+278: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+279: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+280: (b7) r0 = 0                      ; frame1: R0_w=0
+281: (b7) r0 = 0                      ; frame1: R0_w=0
+282: (95) exit
+returning from callee:
+ frame1: R0_w=0 R1_w=ctx(off=0,imm=0) R2_w=scalar() R3_w=scalar() R4_w=ctx(off=0,imm=0) R5_w=scalar() R6_w=scalar() R7_w=scalar() R8_w=scalar() R9_w=scalar(umax=3,var_off=(0x0; 0x3)) R10=fp0
+to caller at 52:
+ R0_w=0 R8_w=scalar() R9_w=scalar() R10=fp0 fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=1859036746 fp-464_w=fp fp-472_w= fp-480_w=mmmmmmmm
+
+from 282 to 52: R0_w=0 R8_w=scalar() R9_w=scalar() R10=fp0 fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=1859036746 fp-464_w=fp fp-472_w= fp-480_w=mmmmmmmm
+52: (79) r1 = *(u64 *)(r10 -448)      ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+53: (79) r2 = *(u64 *)(r10 -456)      ; R2_w=1859036746 R10=fp0 fp-456_w=1859036746
+54: (79) r3 = *(u64 *)(r10 -464)      ; R3_w=fp0 R10=fp0 fp-464_w=fp
+55: (79) r4 = *(u64 *)(r10 -472)      ; R4_w=scalar(id=1,umax=4294967295,var_off=(0x0; 0xffffffff)) R10=fp0 fp-472_w=
+56: (79) r5 = *(u64 *)(r10 -480)      ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+57: (84) w4 = -w4                     ; R4_w=scalar()
+58: (b4) w5 = 24                      ; R5_w=24
+59: (7c) w4 >>= w5                    ; R4_w=scalar(umax=255,var_off=(0x0; 0xff)) R5_w=24
+60: (84) w5 = -w5                     ; R5_w=scalar()
+61: (07) r0 += 1584260119             ; R0_w=1584260119
+62: (77) r8 >>= 13                    ; R8_w=scalar(umax=2251799813685247,var_off=(0x0; 0x7ffffffffffff))
+63: (24) w9 *= 984970359              ; R9_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+64: (6a) *(u16 *)(r10 -102) = -1878141623     ; R10=fp0 fp-104=????mm??
+65: (84) w4 = -w4                     ; R4_w=scalar()
+66: (d4) r4 = le32 r4                 ; R4_w=scalar()
+67: (dc) r8 = be16 r8                 ; R8_w=scalar()
+68: (64) w8 <<= 25                    ; R8_w=scalar(umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216)
+69: (dc) r9 = be64 r9                 ; R9_w=scalar()
+70: (87) r4 = -r4                     ; R4_w=scalar()
+71: (54) w2 &= -644561331             ; R2_w=1216644680
+72: (b4) w3 = -357832349              ; R3_w=3937134947
+73: (54) w3 &= 731970099              ; R3_w=715188259
+74: (dc) r9 = be32 r9                 ; R9_w=scalar()
+75: (dc) r2 = be32 r2                 ; R2_w=scalar()
+76: (dc) r4 = be16 r4                 ; R4_w=scalar()
+77: (bf) r0 = r3                      ; R0_w=715188259 R3_w=715188259
+78: (bf) r0 = r8                      ; R0_w=scalar(id=2,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R8_w=scalar(id=2,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216)
+79: (25) if r0 > 0x5245a955 goto pc+80        ; R0_w=scalar(id=2,umax=1380297045,var_off=(0x0; 0x7e000000))
+80: (7b) *(u64 *)(r10 -448) = r1      ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+81: (7b) *(u64 *)(r10 -456) = r2      ; R2_w=scalar() R10=fp0 fp-456_w=mmmmmmmm
+82: (7b) *(u64 *)(r10 -464) = r3      ; R3_w=715188259 R10=fp0 fp-464_w=715188259
+83: (7b) *(u64 *)(r10 -472) = r4      ; R4_w=scalar() R10=fp0 fp-472_w=mmmmmmmm
+84: (7b) *(u64 *)(r10 -480) = r5      ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+85: (bf) r2 = r1                      ; R1_w=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+86: (bf) r3 = r1                      ; R1_w=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0)
+87: (bf) r4 = r1                      ; R1_w=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0)
+88: (85) call pc+152
+caller:
+ R8_w=scalar(id=2,umax=1380297045,var_off=(0x0; 0x7e000000)) R9_w=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=mmmmmmmm fp-464_w=715188259 fp-472_w=mmmmmmmm fp-480_w=mmmmmmmm
+callee:
+ frame1: R1_w=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0) R5_w=scalar() R10=fp0
+241: frame1:
+241: (b7) r7 = -1634332253            ; frame1: R7_w=-1634332253
+242: (77) r7 >>= 10                   ; frame1: R7_w=18014398507885956
+243: (bc) w6 = w7                     ; frame1: R6_w=4293371268 R7_w=18014398507885956
+244: (27) r7 *= -1298270869           ; frame1: R7_w=6541298735600468524
+245: (87) r6 = -r6                    ; frame1: R6_w=scalar()
+246: (a4) w6 ^= 319035929             ; frame1: R6_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+247: (24) w7 *= -1227960499           ; frame1: R7_w=1582938940
+248: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+249: (bf) r6 = r10                    ; frame1: R6_w=fp0 R10=fp0
+250: (bc) w2 = w7                     ; frame1: R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R7_w=scalar()
+251: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+252: (dc) r2 = be16 r2                ; frame1: R2_w=scalar()
+253: (47) r7 |= -1172190071           ; frame1: R7_w=scalar(umin=18446744072537361545,var_off=(0xffffffffba21cc89; 0x45de3376),u32_min=-1172190071)
+254: (14) w7 -= 2007565469            ; frame1: R7_w=scalar(umin=1115211756,umax=2287401826,var_off=(0xc000; 0xcffe3ffe),s32_min=-2147434496,s32_max=1342111742)
+255: (37) r2 /= -643750851            ; frame1: R2_w=scalar()
+256: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+257: (44) w7 |= 2106886615            ; frame1: R7_w=scalar(umin=2106886615,umax=4294967295,var_off=(0x7d9489d7; 0x826b7628),s32_min=-40597033)
+258: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+259: (b7) r5 = -263441571             ; frame1: R5_w=-263441571
+260: (bf) r3 = r5                     ; frame1: R3_w=-263441571 R5_w=-263441571
+261: (bf) r6 = r3                     ; frame1: R3_w=-263441571 R6_w=-263441571
+262: (b7) r5 = 56                     ; frame1: R5_w=56
+263: (6f) r6 <<= r5                   ; frame1: R5_w=56 R6_w=6701356245527298048
+264: (bc) w8 = w7                     ; frame1: R7_w=scalar() R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+265: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+266: (b4) w7 = -450841245             ; frame1: R7_w=3844126051
+267: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+268: (b7) r9 = -317194555             ; frame1: R9_w=-317194555
+269: (87) r9 = -r9                    ; frame1: R9_w=scalar()
+270: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+271: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+272: (17) r5 -= -1188531907           ; frame1: R5_w=1188531963
+273: (dc) r7 = be32 r7                ; frame1: R7_w=scalar()
+274: (74) w9 >>= 30                   ; frame1: R9_w=scalar(umax=3,var_off=(0x0; 0x3))
+275: (84) w5 = -w5                    ; frame1: R5_w=scalar()
+276: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+277: (dc) r6 = be32 r6                ; frame1: R6_w=scalar()
+278: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+279: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+280: (b7) r0 = 0                      ; frame1: R0_w=0
+281: (b7) r0 = 0                      ; frame1: R0_w=0
+282: (95) exit
+returning from callee:
+ frame1: R0_w=0 R1_w=ctx(off=0,imm=0) R2_w=scalar() R3_w=scalar() R4_w=ctx(off=0,imm=0) R5_w=scalar() R6_w=scalar() R7_w=scalar() R8_w=scalar() R9_w=scalar(umax=3,var_off=(0x0; 0x3)) R10=fp0
+to caller at 89:
+ R0_w=0 R8_w=scalar(id=2,umax=1380297045,var_off=(0x0; 0x7e000000)) R9_w=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=mmmmmmmm fp-464_w=715188259 fp-472_w=mmmmmmmm fp-480_w=mmmmmmmm
+
+from 282 to 89: R0_w=0 R8_w=scalar(id=2,umax=1380297045,var_off=(0x0; 0x7e000000)) R9_w=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=mmmmmmmm fp-464_w=715188259 fp-472_w=mmmmmmmm fp-480_w=mmmmmmmm
+89: (79) r1 = *(u64 *)(r10 -448)      ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+90: (79) r2 = *(u64 *)(r10 -456)      ; R2_w=scalar() R10=fp0 fp-456_w=mmmmmmmm
+91: (79) r3 = *(u64 *)(r10 -464)      ; R3_w=715188259 R10=fp0 fp-464_w=715188259
+92: (79) r4 = *(u64 *)(r10 -472)      ; R4_w=scalar() R10=fp0 fp-472_w=mmmmmmmm
+93: (79) r5 = *(u64 *)(r10 -480)      ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+94: (84) w4 = -w4                     ; R4_w=scalar()
+95: (84) w2 = -w2                     ; R2_w=scalar()
+96: (2c) w3 *= w0                     ; R0_w=0 R3_w=0
+97: (07) r9 += -283230607             ; R9_w=scalar()
+98: (84) w0 = -w0                     ; R0_w=scalar()
+99: (84) w4 = -w4                     ; R4_w=scalar()
+100: (87) r8 = -r8                    ; R8_w=scalar()
+101: (84) w8 = -w8                    ; R8_w=scalar()
+102: (b7) r6 = -1077562289            ; R6_w=-1077562289
+103: (37) r3 /= 1958352917            ; R3_w=scalar()
+104: (34) w2 /= -138172731            ; R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+105: (a7) r4 ^= 1974328255            ; R4_w=scalar()
+106: (dc) r5 = be32 r5                ; R5_w=scalar()
+107: (44) w2 |= 24398385              ; R2_w=scalar(umin=24398385,umax=4294967295,var_off=(0x1744a31; 0xfe8bb5ce),s32_min=-2123085263)
+108: (d4) r6 = le64 r6                ; R6_w=scalar()
+109: (4c) w4 |= w0                    ; R0_w=scalar() R4_w=scalar()
+110: (d4) r8 = le16 r8                ; R8_w=scalar()
+111: (84) w4 = -w4                    ; R4_w=scalar()
+112: (74) w3 >>= 2                    ; R3_w=scalar(umax=1073741823,var_off=(0x0; 0x3fffffff))
+113: (87) r8 = -r8                    ; R8_w=scalar()
+114: (dc) r4 = be32 r4                ; R4_w=scalar()
+115: (1c) w9 -= w0                    ; R0_w=scalar() R9_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+116: (77) r6 >>= 46                   ; R6_w=scalar(umax=262143,var_off=(0x0; 0x3ffff))
+117: (bf) r0 = r8                     ; R0_w=scalar(id=3) R8_w=scalar(id=3)
+118: (bf) r0 = r0                     ; R0_w=scalar(id=3)
+119: (bf) r0 = r5                     ; R0_w=scalar(id=4) R5_w=scalar(id=4)
+120: (84) w8 = -w8                    ; R8_w=scalar()
+121: (84) w3 = -w3                    ; R3_w=scalar()
+122: (7b) *(u64 *)(r10 -448) = r1     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+123: (7b) *(u64 *)(r10 -464) = r3     ; R3_w=scalar() R10=fp0 fp-464_w=mmmmmmmm
+124: (7b) *(u64 *)(r10 -480) = r5     ; R5_w=scalar(id=4) R10=fp0 fp-480_w=mmmmmmmm
+125: (85) call bpf_ktime_get_boot_ns#125      ; R0_w=scalar()
+126: (79) r1 = *(u64 *)(r10 -448)     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+127: (79) r3 = *(u64 *)(r10 -464)     ; R3_w=scalar() R10=fp0 fp-464_w=mmmmmmmm
+128: (79) r5 = *(u64 *)(r10 -480)     ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+129: (bf) r9 = r10                    ; R9_w=fp0 R10=fp0
+130: (6a) *(u16 *)(r9 -118) = 1792337465      ; R9_w=fp0 fp-120=????mm??
+131: (dc) r5 = be32 r5                ; R5_w=scalar()
+132: (87) r0 = -r0                    ; R0_w=scalar()
+133: (dc) r6 = be16 r6                ; R6_w=scalar()
+134: (b7) r8 = 784369781              ; R8_w=784369781
+135: (87) r8 = -r8                    ; R8_w=scalar()
+136: (bf) r8 = r10                    ; R8_w=fp0 R10=fp0
+137: (62) *(u32 *)(r8 -304) = 1604498515      ; R8_w=fp0 fp-304=1604498515
+138: (64) w5 <<= 26                   ; R5_w=scalar(umax=4227858432,var_off=(0x0; 0xfc000000),s32_max=2080374784)
+139: (87) r6 = -r6                    ; R6_w=scalar()
+140: (87) r3 = -r3                    ; R3_w=scalar()
+141: (c3) r0 = atomic_cmpxchg((u32 *)(r8 -472), r0, r9)       ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R8_w=fp0 R9_w=fp0 fp-472_w=mmmmmmmm
+142: (dc) r3 = be16 r3                ; R3_w=scalar()
+143: (dc) r6 = be32 r6                ; R6_w=scalar()
+144: (84) w5 = -w5                    ; R5_w=scalar()
+145: (84) w3 = -w3                    ; R3_w=scalar()
+146: (bf) r2 = r3                     ; R2_w=scalar(id=5) R3_w=scalar(id=5)
+147: (97) r2 %= 707802403             ; R2_w=scalar()
+148: (dc) r9 = be64 r9                ; R9_w=scalar()
+149: (4c) w6 |= w0                    ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R6_w=scalar()
+150: (bc) w7 = w5                     ; R5_w=scalar() R7_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+151: (84) w7 = -w7                    ; R7_w=scalar()
+152: (dc) r9 = be32 r9                ; R9_w=scalar()
+153: (87) r6 = -r6                    ; R6_w=scalar()
+154: (97) r7 %= -992305235            ; R7_w=scalar()
+155: (bc) w4 = w3                     ; R3_w=scalar(id=5) R4_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+156: (87) r0 = -r0                    ; R0_w=scalar()
+157: (b7) r0 = 0                      ; R0_w=0
+158: (b7) r0 = 0                      ; R0_w=0
+159: (95) exit
+
+from 79 to 160: R0_w=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R1_w=ctx(off=0,imm=0) R2_w=scalar() R3_w=715188259 R4_w=scalar() R5_w=scalar() R8_w=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R9_w=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=1859036746 fp-464_w=fp fp-472_w= fp-480_w=mmmmmmmm
+160: (7b) *(u64 *)(r10 -448) = r1     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+161: (7b) *(u64 *)(r10 -456) = r2     ; R2_w=scalar() R10=fp0 fp-456_w=mmmmmmmm
+162: (7b) *(u64 *)(r10 -464) = r3     ; R3_w=715188259 R10=fp0 fp-464_w=715188259
+163: (7b) *(u64 *)(r10 -472) = r4     ; R4_w=scalar() R10=fp0 fp-472_w=mmmmmmmm
+164: (7b) *(u64 *)(r10 -480) = r5     ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+165: (bf) r2 = r1                     ; R1_w=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+166: (bf) r3 = r1                     ; R1_w=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0)
+167: (bf) r4 = r1                     ; R1_w=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0)
+168: (85) call pc+72
+caller:
+ R8_w=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R9_w=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=mmmmmmmm fp-464_w=715188259 fp-472_w=mmmmmmmm fp-480_w=mmmmmmmm
+callee:
+ frame1: R1_w=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0) R3_w=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0) R5_w=scalar() R10=fp0
+241: frame1:
+241: (b7) r7 = -1634332253            ; frame1: R7_w=-1634332253
+242: (77) r7 >>= 10                   ; frame1: R7_w=18014398507885956
+243: (bc) w6 = w7                     ; frame1: R6_w=4293371268 R7_w=18014398507885956
+244: (27) r7 *= -1298270869           ; frame1: R7_w=6541298735600468524
+245: (87) r6 = -r6                    ; frame1: R6_w=scalar()
+246: (a4) w6 ^= 319035929             ; frame1: R6_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+247: (24) w7 *= -1227960499           ; frame1: R7_w=1582938940
+248: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+249: (bf) r6 = r10                    ; frame1: R6_w=fp0 R10=fp0
+250: (bc) w2 = w7                     ; frame1: R2_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R7_w=scalar()
+251: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+252: (dc) r2 = be16 r2                ; frame1: R2_w=scalar()
+253: (47) r7 |= -1172190071           ; frame1: R7_w=scalar(umin=18446744072537361545,var_off=(0xffffffffba21cc89; 0x45de3376),u32_min=-1172190071)
+254: (14) w7 -= 2007565469            ; frame1: R7_w=scalar(umin=1115211756,umax=2287401826,var_off=(0xc000; 0xcffe3ffe),s32_min=-2147434496,s32_max=1342111742)
+255: (37) r2 /= -643750851            ; frame1: R2_w=scalar()
+256: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+257: (44) w7 |= 2106886615            ; frame1: R7_w=scalar(umin=2106886615,umax=4294967295,var_off=(0x7d9489d7; 0x826b7628),s32_min=-40597033)
+258: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+259: (b7) r5 = -263441571             ; frame1: R5_w=-263441571
+260: (bf) r3 = r5                     ; frame1: R3_w=-263441571 R5_w=-263441571
+261: (bf) r6 = r3                     ; frame1: R3_w=-263441571 R6_w=-263441571
+262: (b7) r5 = 56                     ; frame1: R5_w=56
+263: (6f) r6 <<= r5                   ; frame1: R5_w=56 R6_w=6701356245527298048
+264: (bc) w8 = w7                     ; frame1: R7_w=scalar() R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+265: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+266: (b4) w7 = -450841245             ; frame1: R7_w=3844126051
+267: (84) w7 = -w7                    ; frame1: R7_w=scalar()
+268: (b7) r9 = -317194555             ; frame1: R9_w=-317194555
+269: (87) r9 = -r9                    ; frame1: R9_w=scalar()
+270: (84) w8 = -w8                    ; frame1: R8_w=scalar()
+271: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+272: (17) r5 -= -1188531907           ; frame1: R5_w=1188531963
+273: (dc) r7 = be32 r7                ; frame1: R7_w=scalar()
+274: (74) w9 >>= 30                   ; frame1: R9_w=scalar(umax=3,var_off=(0x0; 0x3))
+275: (84) w5 = -w5                    ; frame1: R5_w=scalar()
+276: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+277: (dc) r6 = be32 r6                ; frame1: R6_w=scalar()
+278: (87) r7 = -r7                    ; frame1: R7_w=scalar()
+279: (87) r3 = -r3                    ; frame1: R3_w=scalar()
+280: (b7) r0 = 0                      ; frame1: R0_w=0
+281: (b7) r0 = 0                      ; frame1: R0_w=0
+282: (95) exit
+returning from callee:
+ frame1: R0_w=0 R1_w=ctx(off=0,imm=0) R2_w=scalar() R3_w=scalar() R4_w=ctx(off=0,imm=0) R5_w=scalar() R6_w=scalar() R7_w=scalar() R8_w=scalar() R9_w=scalar(umax=3,var_off=(0x0; 0x3)) R10=fp0
+to caller at 169:
+ R0_w=0 R8_w=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R9_w=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=mmmmmmmm fp-464_w=715188259 fp-472_w=mmmmmmmm fp-480_w=mmmmmmmm
+
+from 282 to 169: R0_w=0 R8_w=scalar(id=2,umin=1380297046,umax=4261412864,var_off=(0x0; 0xfe000000),s32_max=2113929216) R9_w=scalar() R10=fp0 fp-104=????mm?? fp-280=1268359523 fp-376=??mm???? fp-448_w=ctx fp-456_w=mmmmmmmm fp-464_w=715188259 fp-472_w=mmmmmmmm fp-480_w=mmmmmmmm
+169: (79) r1 = *(u64 *)(r10 -448)     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+170: (79) r2 = *(u64 *)(r10 -456)     ; R2_w=scalar() R10=fp0 fp-456_w=mmmmmmmm
+171: (79) r3 = *(u64 *)(r10 -464)     ; R3_w=715188259 R10=fp0 fp-464_w=715188259
+172: (79) r4 = *(u64 *)(r10 -472)     ; R4_w=scalar() R10=fp0 fp-472_w=mmmmmmmm
+173: (79) r5 = *(u64 *)(r10 -480)     ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+174: (84) w8 = -w8                    ; R8_w=scalar()
+175: (84) w4 = -w4                    ; R4_w=scalar()
+176: (bf) r4 = r10                    ; R4_w=fp0 R10=fp0
+177: (bc) w4 = w2                     ; R2_w=scalar() R4_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+178: (87) r5 = -r5                    ; R5_w=scalar()
+179: (87) r4 = -r4                    ; R4_w=scalar()
+180: (17) r9 -= -1402752955           ; R9_w=scalar()
+181: (dc) r8 = be16 r8                ; R8_w=scalar()
+182: (6a) *(u16 *)(r10 -140) = 1905575639     ; R10=fp0 fp-144=??mm????
+183: (27) r0 *= 1730856339            ; R0_w=0
+184: (87) r0 = -r0                    ; R0_w=scalar()
+185: (62) *(u32 *)(r10 -356) = -553631901     ; R10=fp0 fp-360=mmmm????
+186: (04) w8 += -1286340911           ; R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+187: (bf) r2 = r1                     ; R1_w=ctx(off=0,imm=0) R2_w=ctx(off=0,imm=0)
+188: (d4) r9 = le64 r9                ; R9_w=scalar()
+189: (a7) r5 ^= -1704449187           ; R5_w=scalar()
+190: (b7) r8 = 1035764835             ; R8_w=1035764835
+191: (87) r5 = -r5                    ; R5_w=scalar()
+192: (84) w0 = -w0                    ; R0_w=scalar()
+193: (dc) r5 = be16 r5                ; R5_w=scalar()
+194: (0c) w0 += w0                    ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+195: (bc) w6 = w8                     ; R6_w=1035764835 R8_w=1035764835
+196: (dc) r9 = be16 r9                ; R9_w=scalar()
+197: (62) *(u32 *)(r10 -292) = -283757609     ; R10=fp0 fp-296=mmmm????
+198: (bf) r0 = r8                     ; R0_w=1035764835 R8_w=1035764835
+199: (bf) r0 = r5                     ; R0_w=scalar(id=6) R5_w=scalar(id=6)
+200: (5d) if r0 != r0 goto pc-81      ; R0_w=scalar(id=6)
+201: (bf) r2 = r5                     ; R2_w=scalar(id=6) R5_w=scalar(id=6)
+202: (87) r2 = -r2                    ; R2_w=scalar()
+203: (a7) r0 ^= -1610080341           ; R0_w=scalar()
+204: (bf) r4 = r1                     ; R1_w=ctx(off=0,imm=0) R4_w=ctx(off=0,imm=0)
+205: (7b) *(u64 *)(r10 -448) = r1     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+206: (7b) *(u64 *)(r10 -456) = r2     ; R2_w=scalar() R10=fp0 fp-456_w=mmmmmmmm
+207: (7b) *(u64 *)(r10 -464) = r3     ; R3_w=715188259 R10=fp0 fp-464_w=715188259
+208: (7b) *(u64 *)(r10 -472) = r4     ; R4_w=ctx(off=0,imm=0) R10=fp0 fp-472_w=ctx
+209: (7b) *(u64 *)(r10 -480) = r5     ; R5_w=scalar(id=6) R10=fp0 fp-480_w=mmmmmmmm
+210: (85) call bpf_get_current_task#35        ; R0_w=scalar()
+211: (79) r1 = *(u64 *)(r10 -448)     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+212: (79) r2 = *(u64 *)(r10 -456)     ; R2_w=scalar() R10=fp0 fp-456_w=mmmmmmmm
+213: (79) r3 = *(u64 *)(r10 -464)     ; R3_w=715188259 R10=fp0 fp-464_w=715188259
+214: (79) r4 = *(u64 *)(r10 -472)     ; R4_w=ctx(off=0,imm=0) R10=fp0 fp-472_w=ctx
+215: (79) r5 = *(u64 *)(r10 -480)     ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+216: (a7) r8 ^= -1787378541           ; R8_w=-1463140112
+217: (dc) r6 = be16 r6                ; R6_w=scalar()
+218: (87) r9 = -r9                    ; R9_w=scalar()
+219: (87) r0 = -r0                    ; R0_w=scalar()
+220: (b7) r8 = 28                     ; R8_w=28
+221: (6f) r9 <<= r8                   ; R8_w=28 R9_w=scalar(smax=9223372036586340352,umax=18446744073441116160,var_off=(0x0; 0xfffffffff0000000),s32_max=1879048192,u32_max=-268435456)
+222: (84) w3 = -w3                    ; R3_w=scalar()
+223: (44) w0 |= 2024023593            ; R0_w=scalar(umin=2024023593,umax=4294967295,var_off=(0x78a42629; 0x875bd9d6),s32_min=-123460055)
+224: (84) w9 = -w9                    ; R9_w=scalar()
+225: (87) r8 = -r8                    ; R8_w=scalar()
+226: (64) w8 <<= 21                   ; R8_w=scalar(umax=4292870144,var_off=(0x0; 0xffe00000),s32_max=2145386496)
+227: (dc) r6 = be16 r6                ; R6_w=scalar()
+228: (dc) r5 = be32 r5                ; R5_w=scalar()
+229: (dc) r9 = be16 r9                ; R9_w=scalar()
+230: (87) r5 = -r5                    ; R5_w=scalar()
+231: (44) w9 |= -1345566149           ; R9_w=scalar(umin=2949401147,umax=4294967295,var_off=(0xafcc4a3b; 0x5033b5c4),s32_min=-1345566149,s32_max=-1)
+232: (87) r2 = -r2                    ; R2_w=scalar()
+233: (dc) r6 = be32 r6                ; R6_w=scalar()
+234: (34) w8 /= -1628368419           ; R8_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff))
+235: (1f) r0 -= r0                    ; R0_w=scalar(smin=-2270943702,smax=2270943702,umax=18446744073709551614,var_off=(0x0; 0xfffffffffffffffe),s32_max=2147483646,u32_max=-2)
+236: (74) w3 >>= 7                    ; R3_w=scalar(umax=33554431,var_off=(0x0; 0x1ffffff))
+237: (87) r3 = -r3                    ; R3_w=scalar()
+238: (bc) w0 = w5                     ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R5_w=scalar()
+239: (bc) w0 = w2                     ; R0_w=scalar(umax=4294967295,var_off=(0x0; 0xffffffff)) R2_w=scalar()
+240: (05) goto pc-121
+120: (84) w8 = -w8                    ; R8_w=scalar()
+121: (84) w3 = -w3                    ; R3_w=scalar()
+122: (7b) *(u64 *)(r10 -448) = r1     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+123: (7b) *(u64 *)(r10 -464) = r3     ; R3_w=scalar() R10=fp0 fp-464_w=mmmmmmmm
+124: (7b) *(u64 *)(r10 -480) = r5     ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+125: (85) call bpf_ktime_get_boot_ns#125      ; R0_w=scalar()
+126: (79) r1 = *(u64 *)(r10 -448)     ; R1_w=ctx(off=0,imm=0) R10=fp0 fp-448_w=ctx
+127: (79) r3 = *(u64 *)(r10 -464)     ; R3_w=scalar() R10=fp0 fp-464_w=mmmmmmmm
+128: (79) r5 = *(u64 *)(r10 -480)     ; R5_w=scalar() R10=fp0 fp-480_w=mmmmmmmm
+129: (bf) r9 = r10                    ; R9_w=fp0 R10=fp0
+130: (6a) *(u16 *)(r9 -118) = 1792337465      ; R9_w=fp0 fp-120=????mm??
+131: (dc) r5 = be32 r5                ; R5_w=scalar()
+132: (87) r0 = -r0                    ; R0_w=scalar()
+133: (dc) r6 = be16 r6                ; R6_w=scalar()
+134: (b7) r8 = 784369781              ; R8_w=784369781
+135: (87) r8 = -r8                    ; R8_w=scalar()
+136: (bf) r8 = r10                    ; R8_w=fp0 R10=fp0
+137: (62) *(u32 *)(r8 -304) = 1604498515      ; R8_w=fp0 fp-304=1604498515
+138: (64) w5 <<= 26                   ; R5_w=scalar(umax=4227858432,var_off=(0x0; 0xfc000000),s32_max=2080374784)
+139: (87) r6 = -r6                    ; R6_w=scalar()
+140: (87) r3 = -r3                    ; R3_w=scalar()
+141: (c3) r0 = atomic_cmpxchg((u32 *)(r8 -472), r0, r9)
+invalid size of register fill
+processed 431 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+
+SYZFAIL: BUG: ebpf-fuzz differential testing checker
+
+ (errno 13: Permission denied)
+SYZFAIL: child failed
+ (errno 0: Success)
+loop exited with status 67

@@ -1,0 +1,6 @@
+# Copyright 2020 syzkaller project authors. All rights reserved.
+# Use of this source code is governed by Apache 2 LICENSE that can be found in the LICENSE file.
+
+kernel:
+ repo: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ tag: 6e98b09da931a00bf4e0477d0fa52748bf28fcce

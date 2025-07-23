@@ -1,0 +1,10 @@
+cvc static library: ./configure.sh --static
+make install
+https://cvc5.github.io/docs/cvc5-1.0.0/installation/installation.html
+
+libpoly and libpolyxx: https://github.com/SRI-CSL/libpoly
+make install
+
+cadical
+/home/tlyu/ebpf-fuzzing/cadical/build
+sudo cp libcadical.a /usr/lib/
