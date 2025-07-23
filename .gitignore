@@ -35,3 +35,10 @@ dashboard/app/.gcloudignore
 fuzzing-dir/linux-kernel
 fuzzing-dir/vm-image
 fuzzing-dir/workdir/*
+
+fuzzing-dir/dafny-tool/
+fuzzing-dir/dafny.tar.gz
+fuzzing-dir/linux-kernel.tar.gz
+fuzzing-dir/vm-image.tar.gz
+go-env/
+libbpf/
