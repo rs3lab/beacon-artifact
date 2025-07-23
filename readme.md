@@ -47,7 +47,7 @@ make
 
 ```bash
 cd fuzzing-dir
-sudo syzkaller/bin/syz-manager -config ebpf.cfg
+sudo ../syzkaller/bin/syz-manager -config ebpf.cfg
 ```
 
 > **Note**: If the command fails or stucks without any hints,
