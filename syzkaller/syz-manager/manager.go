@@ -264,8 +264,23 @@ func RunManager(cfg *mgrconfig.Config) {
 			numReproducing := atomic.LoadUint32(&mgr.numReproducing)
 			numFuzzing := atomic.LoadUint32(&mgr.numFuzzing)
 
-			log.Logf(0, "VMs %v, executed %v, cover %v, signal %v/%v, bugs %v, repro %v, triageQLen %v",
-				numFuzzing, executed, corpusCover, corpusSignal, maxSignal, crashes, numReproducing, triageQLen)
+			secs := uint64(1)
+			if !mgr.firstConnect.IsZero() {
+			        secs = uint64(time.Since(mgr.firstConnect))/1e9 + 1
+			}
+
+			speed := "not running yet";
+			if x := executed / secs; x >= 10 {
+				speed = fmt.Sprintf("speed %v/sec", x);
+	                } else if x := executed * 60 / secs; x >= 10 {
+				speed = fmt.Sprintf("speed %v/min", x);
+	                } else {
+	                        x = executed * 60 * 60 / secs;
+				speed = fmt.Sprintf("speed %v/hour", x);
+	                }
+
+			log.Logf(0, "VMs %v, executed %v, cover %v, signal %v/%v, bugs %v, repro %v, triageQLen %v, %v",
+				numFuzzing, executed, corpusCover, corpusSignal, maxSignal, crashes, numReproducing, triageQLen, speed)
 		}
 	}()
 
