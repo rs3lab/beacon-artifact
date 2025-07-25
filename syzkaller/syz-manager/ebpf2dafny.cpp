@@ -1105,7 +1105,7 @@ void count_insns_per_category(union bpf_attr *prog, int *alu, int *ld, int *mem,
 }
 
 int VerifyOneProg(char *progAttr1, char *mapAttrs1, int map_cnt, int priv, char *itm_states,
-					int runtime_res, int err_lineno, char *workdir, char *dafny_veri_log, char *runtime_log) {
+	int runtime_res, int err_lineno, char *workdir, char *dafny_veri_log, char *runtime_log, bool is_eval) {
 
 	std::stringstream header, trans_dafny, trans_dafny_eval, tmp_dafny;
 	int isBug = 0, veri_res = 0;
@@ -1114,7 +1114,7 @@ int VerifyOneProg(char *progAttr1, char *mapAttrs1, int map_cnt, int priv, char 
 	bool used_regs[11] = {false};
 	struct verify_range range = {0, 0};
 
-	bool is_eval = true;
+	// bool is_eval = true;
 	bool is_same_error = true;
 
 	union bpf_attr *progAttr = (union bpf_attr*)progAttr1;

@@ -104,6 +104,8 @@ type Config struct {
 	// long as it preserves `bin` dir structure)
 	Syzkaller string `json:"syzkaller"`
 
+	IsEval bool `json:"eval"`
+
 	// Number of parallel test processes inside of each VM.
 	// Allowed values are 1-32, recommended range is ~4-8, default value is 6.
 	// It should be chosen to saturate CPU inside of the VM and maximize number of test executions,
@@ -205,6 +207,7 @@ type Config struct {
 
 	// Implementation details beyond this point. Filled after parsing.
 	Derived `json:"-"`
+
 }
 
 type Subsystem struct {

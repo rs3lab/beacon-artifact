@@ -25,6 +25,10 @@ Beacon
     |------ readme.md
 ```
 
+## A ready environment on Cloudlab
+
+We have already setup a ready enviroment on Cloudlab
+
 
 ## Environment setup
 
@@ -32,6 +36,9 @@ Beacon
 
 - Execute [`env.sh`](./env.sh) to setup the env.
 
+- **We have already set up a ready enviroment on a 32-core Cloudlab.**
+If you prefer to directly use that environment,
+please share your SSH public key to us throught the Hotcrp.
 
 ## Run Beacon
 
@@ -41,7 +48,7 @@ cd syzkaller
 make
 ```
 
-- Replace `http` field in `fuzzing-dir/ebpf.cfg` with your own ip
+- Replace `http` field in `fuzzing-dir/ebpf.cfg` with your own ip.
 
 - Execute the below command to start the fuzzer
 
@@ -53,13 +60,18 @@ sudo ../syzkaller/bin/syz-manager -config ebpf.cfg
 > **Note**: If the command fails or stucks without any hints,
 please try add `-debug` to see the details.
 
+- Open the address specified in the `http` field in your browser to see the instant fuzzing statistics.
+
+> **Note**: If you are running the fuzzer on your server and open the address on your local browser, you must use the ip instead of `localhost`.
+
+
 ## Evaluations
 
 ### Bug-finding (Section 6.1)
 
 Bug exposure time in fuzzing varies. It can be minutes, days or even weeks.
 To show we did find these bugs listed in the paper,
-we attach the detailed information (e.g., reporting, conformation, anc fixes) [here](./bugs.md).
+we attach the detailed information (e.g., reporting, conformation, anc fixes) [here](./bugs/bugs.md).
 
 TODO: SpecCheck can detect the PoCs
 
@@ -68,6 +80,39 @@ TODO: SpecCheck can detect the PoCs
 
 ### Performance (Section 6.3)
 
+This experiment needs to be run on a *224-core machine for 40 hours* to reproduce the result.
+After the running,
+the file `fuzzing-dir/workdir/verify-per.csv` records the statistics of tests,
+including the verification result from the runtime and SpecCheck, the time spent at different stage.
+
+The fuzzing speed and code coverage show on both the web page and terminal.
+After opening the webpage specified by the `http` field in your configuration file,
+you will see the the speed `exec total 	xx (xx/sec)` and the branch coverage `signal 	xx`.
+To see the latest speed and coverage, you need to manually refresh the webpage.
+Also, you can see them on the terminal (``VMs 1, executed xx, signal xx/xx, ... , speed 22/sec``),
+which outputs the latest data every 10 seconds.
+
+- Fuzzing througput
+    - **Speed**: If you are not running on the machine with less cores,
+    the speed can be slower than the number (23-25 exec/second) in the paper.
+
+    - **Figure 9(a)**: Run the below command to generate Figure 9 `data/fig9.pdf` and see the entire execution time
+    distribution of test cases during fuzzing in Figure 9 (a).
+        ```bash
+        ./visual.sh --original
+        # or below on your new data
+        ./visual.sh --regenerated
+        ```
+
+- Performance improvement from state sampling
+    
+    - Execute the below command to run the fuzzer to reproduce the state sampling improvments.
+        ```bash
+        cd fuzzing-dir
+        sudo ../syzkaller/bin/syz-manager -config ebpf-impv.cfg
+        ```
+    
+    - Check out the figure previously generate figure 9 (b) to see the improvements. If you want to see the improvements on your newly collected data, you need to rerun `./visual.sh --regenerated`.
 
 ## Contact
 
