@@ -28,6 +28,7 @@ pushd libbpf
 pushd src
 make -j`nproc`
 sudo make install
+sudo make install_uapi_headers
 popd
 popd
 
