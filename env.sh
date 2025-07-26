@@ -5,13 +5,13 @@ sudo apt-get install -y dotnet-sdk-8.0
 # Download Dafny, Linux kernel, and VM image
 
 pushd fuzzing-dir
-wget --no-check-certificate  https://zenodo.org/records/16366262/files/dafny.tar.gz?download=1 -O dafny.tar.gz
+wget --no-check-certificate  https://zenodo.org/records/16450746/files/dafny.tar.gz?download=1 -O dafny.tar.gz
 tar -xzvf dafny.tar.gz
 
-wget --no-check-certificate  https://zenodo.org/records/16366262/files/linux-kernel.tar.gz?download=1 -O linux-kernel.tar.gz
+wget --no-check-certificate  https://zenodo.org/records/16450746/files/linux-kernel.tar.gz?download=1 -O linux-kernel.tar.gz
 tar -xzvf linux-kernel.tar.gz
 
-wget --no-check-certificate https://zenodo.org/records/16366262/files/vm-image.tar.gz?download=1 -O vm-image.tar.gz
+wget --no-check-certificate  https://zenodo.org/records/16450746/files/vm-image.tar.gz?download=1 -O vm-image.tar.gz
 tar -xzvf vm-image.tar.gz
 popd
 
