@@ -114,6 +114,30 @@ which outputs the latest data every 10 seconds.
     
     - Check out the figure previously generate figure 9 (b) to see the improvements. If you want to see the improvements on your newly collected data, you need to rerun `./visual.sh --regenerated`.
 
+
+- Code coverage
+    ```
+    git clone --branch v1.24 https://github.com/acmel/dwarves.git
+    mkdir dwarves/build; cd dwarves/build
+    cmake ../
+    make
+    sudo make install
+
+    git clone https://github.com/trusslab/brf.git
+
+    mkdir $BRF_WORKDIR; cd $BRF_WORKDIR
+    cp $KERNEL/tools/bpf/bpftool/vmlinux.h .
+    mkdir /mnt/kernel_src
+    mount -t 9p -o trans=virtio,version=9p2000.L host0 /mnt/kernel_src
+    cd /mnt/kernel_src/tools/lib/bpf
+    make install_headers
+
+    mkdir -p workdir/bookworm
+    ./bin/syzkaller -config my.cfg
+
+    ```
+
+
 ## Contact
 
 If you have any questions or suggestions,

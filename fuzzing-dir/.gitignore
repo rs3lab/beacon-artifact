@@ -1,0 +1,9 @@
+!brf-wordir/bookworm
+brf-workdir/*
+data/*
+!data
+!data/common.gnuplot
+!data/perf1.gp
+!data/perf2.g
+!data/sample-impv-1.dat
+!data/total-time-1.dat
