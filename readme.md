@@ -77,6 +77,7 @@ TODO: SpecCheck can detect the PoCs
 
 ### Comparison (Section 6.2)
 
+buzzer-env.sh
 
 ### Performance (Section 6.3)
 
@@ -116,27 +117,12 @@ which outputs the latest data every 10 seconds.
 
 
 - Code coverage
+    We introduced how to check the coverage of Beacon at the begining.
+    Here, to compare with BRF, you need to run the below commands to start it and see it coverage in the terminal `VMs 1, executed xx, signal xx`, which signal is the branch coverage.
     ```
-    git clone --branch v1.24 https://github.com/acmel/dwarves.git
-    mkdir dwarves/build; cd dwarves/build
-    cmake ../
-    make
-    sudo make install
-
-    git clone https://github.com/trusslab/brf.git
-
-    mkdir $BRF_WORKDIR; cd $BRF_WORKDIR
-    cp $KERNEL/tools/bpf/bpftool/vmlinux.h .
-    mkdir /mnt/kernel_src
-    mount -t 9p -o trans=virtio,version=9p2000.L host0 /mnt/kernel_src
-    cd /mnt/kernel_src/tools/lib/bpf
-    make install_headers
-
-    mkdir -p workdir/bookworm
-    ./bin/syzkaller -config my.cfg
-
+    cd fuzzing-dir
+    sudo ../sota/brf/bin/syz-manager -config brf.cfg
     ```
-
 
 ## Contact
 
