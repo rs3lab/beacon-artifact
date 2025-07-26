@@ -79,8 +79,11 @@ def gen_sample_impv_data(file_path, is_regen):
 
         for row in reader:
             try:
-                total_time += float(row[7])
-                opt_total_time += float(row[12])
+                opt_total_time += float(row[7])
+                if float(row[12]) == 0:
+                    total_time += float(row[7])
+                else:
+                    total_time += float(row[12])
             except (ValueError, IndexError):
                 print(f"Skipping invalid row: {row}")
                 continue

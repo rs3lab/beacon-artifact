@@ -16,7 +16,7 @@ fi
 if [[ "$1" == "--original" ]]; then
 	OUT=$PWD/data/fig9.pdf TARGET=pdf gnuplot $PWD/data/perf1.gp
 elif [[ "$1" == "--regenerated" ]]; then
-	python perf.py -regen -time workdir/verify-per.csv -impv workdir/verify-per.csv
+	python perf.py -regen -time workdir-impv/verify-per.csv -impv workdir-impv/verify-per.csv
 	OUT=$PWD/data/fig9-regen.pdf TARGET=pdf gnuplot $PWD/data/perf2.gp
 else
 	display_help
