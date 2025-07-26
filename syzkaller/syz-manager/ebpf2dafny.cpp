@@ -1221,8 +1221,8 @@ int VerifyOneProg(char *progAttr1, char *mapAttrs1, int map_cnt, int priv, char 
 
 		trans_dafny << tmp_dafny.str();
 
-    } else {
-        // Positives -> if it's a bug, then a false positive
+    	} else {
+        	// Positives -> if it's a bug, then a false positive
 		trans_cnt = insns2Dafny(progAttr, trans_dafny, used_regs, NULL, &paths1, &trans_time1);
 	}
 

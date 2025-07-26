@@ -415,9 +415,7 @@ func (serv *RPCServer) VerifyOneProgWrapper(a *rpctype.OneProgVeriArgs, r *int) 
 						C.CString(serv.cfg.Workdir),
 						(*C.char)(unsafe.Pointer(&dafny_veri_log[0])),
 						(*C.char)(unsafe.Pointer(&a.VerifyLog[0])),
-						c.int(serv.cfg.eval)
-				)
-			)
+						C.bool(serv.cfg.Eval)))
 
 		if isBug != 0 {
 
