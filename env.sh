@@ -2,9 +2,10 @@
 sudo apt-get update
 sudo apt-get install -y dotnet-sdk-8.0
 
+pushd fuzzing-dir
+
 # Download Dafny, Linux kernel, and VM image
 
-pushd fuzzing-dir
 wget --no-check-certificate  https://zenodo.org/records/16450746/files/dafny.tar.gz?download=1 -O dafny.tar.gz
 tar -xzvf dafny.tar.gz
 
@@ -30,6 +31,14 @@ make -j`nproc`
 sudo make install
 sudo make install_uapi_headers
 popd
+
+# Install for brf
+git clone --branch v1.24 https://github.com/acmel/dwarves.git
+mkdir dwarves/build; cd dwarves/build
+cmake ../
+make
+sudo make install
+
 popd
 
 # Install go
