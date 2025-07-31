@@ -1,0 +1,14 @@
+brf-workdir/*
+!brf-workdir/vmlinux.h
+
+data/*
+!data
+!data/common.gnuplot
+!data/perf1.gp
+!data/perf2.g
+!data/perf1-9a.gp
+!data/perf1-9b.gp
+!data/perf2-9a.gp
+!data/perf2-9b.gp
+!data/sample-impv-1.dat
+!data/total-time-1.dat
