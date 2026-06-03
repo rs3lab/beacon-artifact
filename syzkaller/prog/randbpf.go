@@ -11,7 +11,7 @@ import (
 
 /*
 #cgo CXXFLAGS: -I/usr/lib/ -Wno-narrowing -Wint-to-pointer-cast -std=c++17
-#cgo LDFLAGS: -L/usr/lib64 -lstdc++ -l:libbpf.a -l:libz.a -l:libzstd.a
+#cgo LDFLAGS: -L/usr/lib64 -lstdc++ -l:libbpf.a -l:libz.a -lelf -l:libzstd.a
 #include <stdint.h>
 #include <stdlib.h>
 #include "genbpfcimport.hpp"

@@ -234,7 +234,7 @@ func RunManager(cfg *mgrconfig.Config) {
     if err != nil {
         log.Fatalf("failed to get source file path", err)
     }
-    dafnySpec := filepath.Dir(ex) + "/../../ebpf-dafny-spec/*.dfy"
+    dafnySpec := filepath.Dir(ex) + "/../../eBPF-spec/*.dfy"
 
 	args := [2]string{"-c", "cp " + dafnySpec + " /tmp"}
 	cmd := exec.Command("bash", args[:]...)
