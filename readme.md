@@ -1,5 +1,5 @@
 <h1> eBPF Misbehavior Detection:
-<br /> Fuzzing with a Specification-Based Oracle </h1>
+<br /> Fuzzing with a Specification-Based Oracle V2 </h1>
 
 
 ## Overview
