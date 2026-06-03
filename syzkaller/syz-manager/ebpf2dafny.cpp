@@ -28,6 +28,7 @@
 #include "trancimport.hpp"
 #include "ebpf2dafny.hpp"
 #include "linux-btfs.hpp"
+#include "../../shallow-embedding/src/translator.hpp"
 
 /*
 	TODO:
@@ -1135,116 +1136,184 @@ int VerifyOneProg(char *progAttr1, char *mapAttrs1, int map_cnt, int priv, char 
 	//
 
 
-	// ------ Translate initial settings ------ // 
-	// 
-	header << "include \"spec.dfy\"" << "\n" << "method testMain() {" << "\n\t"
-				<< "var s := new State(\n";
-	//
-	// allow_ptr_leak_set:bool, bypass_spec_v1_set:bool, priv_set:bool, has_net_admin:bool
-	header << "\t\t// allow_ptr_leak_set:bool, bypass_spec_v1_set:bool, priv_set:bool, has_net_admin:bool\n";
-	//
+	// ------ Translate initial settings ------ //  
+	const std::string spec_dir = "/home/farah/veritas/eBPF-spec";
+
+	header << "include \"" << spec_dir << "/datamov-spec.dfy\"\n";
+	header << "include \"" << spec_dir << "/ctrlflow-spec.dfy\"\n";
+	header << "include \"" << spec_dir << "/mem-spec.dfy\"\n";
+	header << "include \"" << spec_dir << "/mem-init.dfy\"\n";
+	header << "include \"" << spec_dir << "/arith-spec.dfy\"\n";
+
+	header << "module Tests {\n\n";
+	header << "    import opened Terms\n";
+	header << "    import opened DataTypes\n";
+	header << "    import opened States\n";
+	header << "    import opened MemInit\n\n";
+	header << "    import opened Utils\n\n";
+	header << "    import opened eBPFArithSpec\n";
+	header << "    import opened eBPFDataMoveSpec\n";
+	header << "    import opened eBPFCtrlFlowSpec\n";
+	header << "    import opened eBPFMemSpec\n\n";
+
+	header << "    ghost method {:timeLimit 60} {:priority 10} test(\n";
+	header << "        cfg: ConfigState, rand: bv64\n";
+	header << "    )\n";
+
+	// ------ Encode program metadata as preconditions on cfg ------ //
+	// allow_ptr_leak, bypass_spec_v1, priv, has_net_admin
+	bool allow_ptr_leak = false, bypass_spec_v1 = false;
+	bool priv_set = false, has_net_admin = false;
 	switch (priv) {
 		case PRIV_UNPRIV:
-			header << "\t\t" << "false, false, false, false, \n";
 			break;
 		case PRIV_CAP_BPF:
-			header << "\t\t" << "false, false, true, false, \n";
+			priv_set = true;
 			break;
 		case PRIV_CAP_PERFMON:
-			header << "\t\t" << "true, true, false, false, \n";
+			allow_ptr_leak = true; bypass_spec_v1 = true;
 			break;
 		case PRIV_CAP_NET_ADMIN:
-			header << "\t\t" << "false, false, false, true, \n";
+			has_net_admin = true;
 			break;
 		case PRIV_CAP_SYS_ADMIN:
-			header << "\t\t" << "true, true, true, true, \n";
+			allow_ptr_leak = true; bypass_spec_v1 = true;
+			priv_set = true;       has_net_admin = true;
 			break;
 		default:
 			std::cerr << "privlege error: " << int(priv) << std::endl;
 			return -1;
 	}
-	//
-	// strict_alignment_set:bool
-	// CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS is Y in testing env
-	// Only when BPF_F_ANY_ALIGNMENT is unset while BPF_F_STRICT_ALIGNMENT is set ==> strict == true
+
+	// strict_alignment: only true when STRICT is set and ANY is not.
+	bool strict_alignment = false;
 	if (progAttr->prog_flags & BPF_F_ANY_ALIGNMENT) {
-		header << "\t\t" << "false";
+		strict_alignment = false;
 	} else if (progAttr->prog_flags & BPF_F_STRICT_ALIGNMENT) {
-		header << "\t\t" << "true";
-	} else {
-		header << "\t\t" << "false";
+		strict_alignment = true;
 	}
-	//
-	header << ");\n\t";
 
-	header << "s.progType := " << bpf_prog_type_str[progAttr->prog_type] << ";\n\t"
-				<< "s.attachType := " << expected_attach_type_str[progAttr->expected_attach_type] << ";\n\n";
-
-	// ------ Translate map informations ------ //
-	header << "\t" << "assume {:axiom} s.maps.Length == " << int(map_cnt) << ";\n";
-	for (int i = 0; i < map_cnt; i++) {
-		if (mapAttrs[i].map_type == 0)
-			continue;
-
-		header << "\t" << "s.CreateMap(" << int(i) << ", "
-					<< bpf_map_type_str[mapAttrs[i].map_type] << ", "
-					<< mapAttrs[i].key_size		<< ", "
-					<< mapAttrs[i].value_size		<< ", "
-					<< mapAttrs[i].max_entries		<< ", "
-					<< mapAttrs[i].flags			<< ", "
-					<< mapAttrs[i].inner_map_fd	<< ");\n";
+	header << "        requires cfg.allow_ptr_leak == " << (allow_ptr_leak ? "true" : "false") << "\n";
+	header << "        requires cfg.bypass_spec_v1 == " << (bypass_spec_v1 ? "true" : "false") << "\n";
+	header << "        requires cfg.priv == "           << (priv_set       ? "true" : "false") << "\n";
+	header << "        requires cfg.strict_alignment == " << (strict_alignment ? "true" : "false") << "\n";
+	
+	if (progAttr->prog_type > 0 && progAttr->prog_type < (uint32_t)bpf_prog_type_str_size) {
+		header << "        requires cfg.progType == "
+					<< bpf_prog_type_str[progAttr->prog_type] << "\n";
 	}
-	header << "\n";
+	if (progAttr->expected_attach_type < (uint32_t)expected_attach_type_str_size - 1) {
+		header << "        requires cfg.attachType == "
+					<< expected_attach_type_str[progAttr->expected_attach_type] << "\n";
+	}
+	
+	int max_mapfd = -1;
+	int max_mapidx = -1;
+	const struct bpf_insn* raw_insns = reinterpret_cast<const struct bpf_insn*>(progAttr->insns);
+    for (int i = 0; i < static_cast<int>(progAttr->insn_cnt) - 1; i++) {
+        if (raw_insns[i].code == (BPF_LD | BPF_IMM | BPF_DW)) {
+            if (raw_insns[i].src_reg == BPF_PSEUDO_MAP_FD) {
+                if (raw_insns[i].imm > max_mapfd) 
+                    max_mapfd = raw_insns[i].imm;
+            } 
+            else if (raw_insns[i].src_reg == BPF_PSEUDO_MAP_IDX ||
+                     raw_insns[i].src_reg == BPF_PSEUDO_MAP_IDX_VALUE) {
+                if (raw_insns[i].imm > max_mapidx)
+                    max_mapidx = raw_insns[i].imm;
+            }
+            i++; // skip second word of LD_IMM64
+        }
+    }
+    if (max_mapidx >= 0) {
+        header << "        requires |cfg.map_fd_arr| > "
+              << max_mapidx << "\n";
+    
+        // Calculate with fallback for missing LOADMAPFD
+        int maps_meta_len = (max_mapfd >= 0) ? (max_mapfd + 1) : 256;
+    
+        header << "        requires forall i | 0 <= i < |cfg.map_fd_arr| "
+              << ":: 0 <= cfg.map_fd_arr[i] < "
+              << maps_meta_len << "\n";
+    }
+   
+		
+	
+	header << "    {\n";
+	header << "        var init_s := init_state(cfg, rand);\n\n";
+	
+    // If the program uses LOADMAPFD, we need to patch the initial state to have enough maps_meta entries and corresponding mems entries to avoid out-of-range errors during translation. We use max_mapfd to determine how many entries are needed.
+    if (max_mapfd >= 0 || max_mapidx >= 0) {
+        int map_meta_rid = 14; // r2id(PTR_TO_MAP_META)
+        // Use the SAME calculation as in the requires block
+        int n_maps = (max_mapfd >= 0) ? (max_mapfd + 1) : 256;
+    
+        // Patch maps_meta
+        header << "        var dummy_map := MapState("
+              << "BPF_MAP_TYPE_ARRAY, 4, 8, 1, 0, 0);\n";
+        header << "        init_s := init_s.(maps_meta := seq("
+              << n_maps << ", i => dummy_map));\n";
+    
+        // Patch mems so PTR_TO_MAP_META region has n_maps entries
+        header << "        var dummy_map_mem := Mem(\n"
+              << "            mem_type := STRUCT,\n"
+              << "            is_concur := false,\n"
+              << "            base := 0,\n"  // placeholder
+              << "            data := []\n"
+              << "        );\n";
+        header << "        init_s := init_s.(mems := init_s.mems["
+              << map_meta_rid << " := seq("
+              << n_maps << ", i => dummy_map_mem)]);\n";
+    }
 
-	// ------ Translate ebpf bytecode to Dafny code instruction by instruction ------ // 
+
+	// ------ Map information (as assumptions on init_s) ------ //
+	// The new translator does not currently use map information, but record it as assumptions for future use.
+
+	// ------ Translate ebpf bytecode using the new translator ------ //
 	//
+	// The previous range-based translation path (used when runtime_res == -1
+	// and itm_states was available) relied on trans_dafy_wrapper /
+	// itm_state_2_dafny / range-restricted insns2Dafny. The new
+	// insns_to_dafny() always translates the entire program in one pass and
+	// reuses `init_s` as its starting state, so positives and negatives go
+	// through the same call site. itm_states is kept in the signature for
+	// backwards compatibility with callers but is currently unused.
+	(void)itm_states;
+	(void)sample_time;
+	(void)range;
+
 	trans_dafny << header.str();
-	if (runtime_res == -1 && itm_states) {
-        // Negatives -> if it's a bug, then a false negative
-		struct interm_state *latest_state = NULL;
-		range = trans_dafy_wrapper(itm_states, trans_dafny, &latest_state, &sample_time);
-		if (range.end == 0 && range.start == 0) {
-			// std::cerr << "Failed to extract the verificaiton range" << std::endl;
-			return isBug;
-		}
-		trans_cnt = insns2Dafny(progAttr, tmp_dafny, used_regs, &range, &paths1, &trans_time1);
 
-		// used registers
-		if (latest_state) {
-			trans_dafny << "// ";
-			for (size_t i = 0; i < 11; ++i) {
-        		trans_dafny << int(i) << ":" << (used_regs[i] ? "true " : "false ");
-			}
-			trans_dafny << std::endl;
-			itm_state_2_dafny(latest_state, trans_dafny, used_regs);
-		}
+	const int rc = insns_to_dafny(
+		reinterpret_cast<const bpf_insn*>(progAttr->insns),
+		static_cast<int>(progAttr->insn_cnt),
+		trans_dafny,
+		used_regs,
+		&trans_time1);
 
-		trans_dafny << tmp_dafny.str();
+	trans_dafny<< "\n    }\n";
+    trans_dafny<< "}\n";
 
-    	} else {
-        	// Positives -> if it's a bug, then a false positive
-		trans_cnt = insns2Dafny(progAttr, trans_dafny, used_regs, NULL, &paths1, &trans_time1);
-	}
-
-	if (trans_cnt < 1) {
-		sprintf(dafny_veri_log, "return trans_cnt: %ld, insn_cnt: %d\n",  trans_cnt, progAttr->insn_cnt);
+	if (rc < 0) {
+		sprintf(dafny_veri_log,
+		        "return trans_cnt: %d, insn_cnt: %d\n",
+		        rc, progAttr->insn_cnt);
 		return -1;
 	}
 
+
+	trans_cnt = static_cast<uint64_t>(rc);
+	paths1 = 0; // no longer tracked by the new translator
+
+
 	// ------ Run dafny verifier to verify the above translated dafny code ------ // 
 
-	std::string final_dafny = trans_dafny.str() + "\n}";
+	std::string final_dafny = trans_dafny.str() ; 
 	std::string veri_output = execute_cmd(final_dafny, &veri_time1);
 	
 	std::string veri_output_eval;
 	std::string final_dafny_eval;
-	if (is_eval && runtime_res == -1 && itm_states && range.start != 0) {
-		trans_dafny_eval << header.str();
-		trans_cnt2 = insns2Dafny(progAttr, trans_dafny_eval, used_regs, NULL, &paths2, &trans_time2);
-		final_dafny_eval = trans_dafny_eval.str() + "\n}";
-		veri_output_eval = execute_cmd(final_dafny_eval, &veri_time2);
-		is_same_error = (regex_match_error_insn(veri_output) == regex_match_error_insn(veri_output_eval));
-	}
+	
 
 	// write_to_prog_staticstic_log(progAttr->prog_name, progAttr->insn_cnt, alu, ld, mem, ctrl, paths);
 

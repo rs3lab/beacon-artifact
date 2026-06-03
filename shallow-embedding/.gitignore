@@ -1,0 +1,3 @@
+src/*.o
+libshallow-embedding.a
+shallow-embedding
