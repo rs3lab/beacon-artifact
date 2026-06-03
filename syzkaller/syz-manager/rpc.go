@@ -30,6 +30,7 @@ import (
 
 /*
 #cgo CXXFLAGS: -I/usr/lib/ -Wno-narrowing -Wint-to-pointer-cast -std=c++17
+#cgo LDFLAGS: -L${SRCDIR}/../bin -lverify -Wl,-rpath,${SRCDIR}/../bin
 #include "trancimport.hpp"
 */
 import "C"

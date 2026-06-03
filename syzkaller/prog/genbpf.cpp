@@ -543,11 +543,13 @@ void genBasicBlock(struct regState *regStates, struct bpf_insn progBytecode[][BB
             case LSOP:
                 genLSOP(regStates, progBytecode[posIdx], &cnt, maxMaps, final_max_cnt);
                 break;
-            case CALLOP:
+	    /* commented by Tao
+	    case CALLOP:
                 break;
                 if ((cnt < 8) && progtype_allows_helpers)
                     genCallOP(regStates, progBytecode[posIdx], &cnt, final_max_cnt, maxMaps, posIdx, verts);
                 break;
+	   */
         }
     }
 

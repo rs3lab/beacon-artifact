@@ -17,6 +17,13 @@
 #include <time.h>
 #include <linux/bpf.h>
 #include <sys/capability.h>
+#ifndef CAP_PERFMON
+#define CAP_PERFMON 38
+#endif
+#ifndef CAP_BPF
+#define CAP_BPF 39
+#endif
+
 
 #if !GOOS_windows
 #include <unistd.h>

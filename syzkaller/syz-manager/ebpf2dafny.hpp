@@ -3,6 +3,7 @@
 #include <linux/bpf_common.h>
 #include <regex>
 #include <set>
+#include <unordered_map>
 
 #define BPF_BASE_TYPE_MASK 0xff
 #define PTR_MAYBE_NULL 0x100
