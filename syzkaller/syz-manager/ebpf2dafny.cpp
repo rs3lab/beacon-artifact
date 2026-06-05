@@ -1269,37 +1269,58 @@ int VerifyOneProg(char *progAttr1, char *mapAttrs1, int map_cnt, int priv, char 
 	// ------ Map information (as assumptions on init_s) ------ //
 	// The new translator does not currently use map information, but record it as assumptions for future use.
 
-	// ------ Translate ebpf bytecode using the new translator ------ //
-	//
-	// The previous range-based translation path (used when runtime_res == -1
-	// and itm_states was available) relied on trans_dafy_wrapper /
-	// itm_state_2_dafny / range-restricted insns2Dafny. The new
-	// insns_to_dafny() always translates the entire program in one pass and
-	// reuses `init_s` as its starting state, so positives and negatives go
-	// through the same call site. itm_states is kept in the signature for
-	// backwards compatibility with callers but is currently unused.
-	(void)itm_states;
-	(void)sample_time;
-	(void)range;
+	
+	
 
 	trans_dafny << header.str();
 
-	const int rc = insns_to_dafny(
-		reinterpret_cast<const bpf_insn*>(progAttr->insns),
-		static_cast<int>(progAttr->insn_cnt),
-		trans_dafny,
-		used_regs,
-		&trans_time1);
+	struct verify_range range = {0, 0};
+    struct interm_state *latest_state = NULL;
+    int rc = 0;
 
-	trans_dafny<< "\n    }\n";
-    trans_dafny<< "}\n";
+    if (runtime_res == -1 && itm_states) {
 
-	if (rc < 0) {
-		sprintf(dafny_veri_log,
-		        "return trans_cnt: %d, insn_cnt: %d\n",
-		        rc, progAttr->insn_cnt);
-		return -1;
-	}
+        range = trans_dafy_wrapper(itm_states, trans_dafny, &latest_state, &sample_time);
+        if (range.end == 0 && range.start == 0) {
+            return -1;
+        }
+
+        std::stringstream tmp_dafny;
+        rc = insns_to_dafny(
+            reinterpret_cast<const bpf_insn*>(progAttr->insns),
+            static_cast<int>(progAttr->insn_cnt),
+            tmp_dafny,
+            used_regs,
+            &trans_time1,
+            &range);
+
+        if (latest_state) {
+            itm_state_2_dafny_new(latest_state, trans_dafny, used_regs);
+        }
+
+        trans_dafny << tmp_dafny.str();
+
+    } else {
+
+        rc = insns_to_dafny(
+            reinterpret_cast<const bpf_insn*>(progAttr->insns),
+            static_cast<int>(progAttr->insn_cnt),
+            trans_dafny,
+            used_regs,
+            &trans_time1,
+            NULL);
+    }
+
+    // ── These come AFTER both branches ──
+    trans_dafny << "\n    }\n";   // close the method body
+    trans_dafny << "}\n";         // close the module
+
+    if (rc < 0) {
+        sprintf(dafny_veri_log,
+                "return trans_cnt: %d, insn_cnt: %d\n",
+                rc, progAttr->insn_cnt);
+        return -1;
+    }
 
 
 	trans_cnt = static_cast<uint64_t>(rc);
