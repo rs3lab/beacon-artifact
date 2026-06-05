@@ -255,6 +255,12 @@ struct ResumePoint {
                                   // that both branches must assign before closing
 };
 
+
+struct verify_range {
+    int start;
+    int end;
+};
+
 // --------------------------------------------------
 // Opcodes
 // --------------------------------------------------
@@ -402,7 +408,8 @@ int insns_to_dafny(const bpf_insn* insns,
                    int insn_cnt,
                    std::stringstream& trans_dafny,
                    bool* used_regs,
-                   uint64_t *duration
+                   uint64_t *duration,
+                   struct verify_range *range
                    );
 
 // Build a complete, self-contained Dafny module string directly from a

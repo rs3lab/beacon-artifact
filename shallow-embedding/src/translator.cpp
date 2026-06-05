@@ -138,7 +138,8 @@ int insns_to_dafny(const bpf_insn* insns,
                    int insn_cnt,
                    std::stringstream& trans_dafny,
                    bool* used_regs,
-                   uint64_t *duration
+                   uint64_t *duration,
+                   struct verify_range *range
                    ) {
     if (!insns || !used_regs || insn_cnt < 1){
         if (duration) *duration = 0;
@@ -154,6 +155,9 @@ int insns_to_dafny(const bpf_insn* insns,
     int insn_idx     = 0;
     int trans_cnt    = 0;
     std::string current_state = "init_s";
+
+    // If we have a range, start from the checkpoint
+    if (range) insn_idx = range->start;
 
     while (true) {
         if (trans_cnt > 5000) {
@@ -206,6 +210,21 @@ int insns_to_dafny(const bpf_insn* insns,
             trans_dafny << indent(static_cast<int>(stack.size() / 2))
                         << "// ERROR: out of range: " << insn_idx << "\n";
             return -1;
+        }
+        
+        // Stop translating past the error instruction
+        if (range && insn_idx > range->end) {
+            // Force-close all open if/else blocks
+            while (!stack.empty()) {
+                ResumePoint rp = stack.back();
+                stack.pop_back();
+                if (rp.kind == ResumeKind::CloseBlock ||
+                    rp.kind == ResumeKind::MergeContinue) {
+                    trans_dafny << indent(static_cast<int>(stack.size() / 2))
+                                << "}\n";
+                }
+            }
+            break;
         }
 
         ++trans_cnt;
@@ -491,7 +510,7 @@ std::string build_dafny_string(const bpf_insn* insns,
 
     
     uint64_t duration = 0;
-    const int translated = insns_to_dafny(insns, insn_cnt, trans, used_regs, &duration);
+    const int translated = insns_to_dafny(insns, insn_cnt, trans, used_regs, &duration,NULL);
     if (translated == -2) 
         throw std::runtime_error("Program too large");  // UNSUPPORTED
     if (translated < 0)
