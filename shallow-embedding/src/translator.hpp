@@ -10,6 +10,9 @@
 #include <string_view>
 #include <vector>
 
+#define BPF_BASE_TYPE_MASK 0xff
+#define PTR_MAYBE_NULL 0x100
+
 static constexpr std::size_t BPF_REG_COUNT = 11;
 
 // --------------------------------------------------
@@ -421,7 +424,13 @@ std::string build_dafny_string(const bpf_insn* insns,
                                uint32_t prog_type,
                                uint32_t attach_type);
 
-#endif
+
+void itm_state_2_dafny_new(
+                            struct interm_state *itm_state,
+                            std::stringstream   &trans_dafny,
+                            bool                *used_regs
+                            );
+#endif            
 
 
 bool is_ld_imm64_pair(const bpf_insn& insn) noexcept;

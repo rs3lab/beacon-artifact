@@ -1143,6 +1143,7 @@ int VerifyOneProg(char *progAttr1, char *mapAttrs1, int map_cnt, int priv, char 
 	header << "include \"" << spec_dir << "/ctrlflow-spec.dfy\"\n";
 	header << "include \"" << spec_dir << "/mem-spec.dfy\"\n";
 	header << "include \"" << spec_dir << "/mem-init.dfy\"\n";
+	header << "include \"" << spec_dir << "/state-init.dfy\"\n";
 	header << "include \"" << spec_dir << "/arith-spec.dfy\"\n";
 
 	header << "module Tests {\n\n";
@@ -1155,7 +1156,7 @@ int VerifyOneProg(char *progAttr1, char *mapAttrs1, int map_cnt, int priv, char 
 	header << "    import opened eBPFDataMoveSpec\n";
 	header << "    import opened eBPFCtrlFlowSpec\n";
 	header << "    import opened eBPFMemSpec\n\n";
-
+	header << "    import opened StateInit\n\n";
 	header << "    ghost method {:timeLimit 60} {:priority 10} test(\n";
 	header << "        cfg: ConfigState, rand: bv64\n";
 	header << "    )\n";
@@ -1274,11 +1275,11 @@ int VerifyOneProg(char *progAttr1, char *mapAttrs1, int map_cnt, int priv, char 
 
 	trans_dafny << header.str();
 
-	struct verify_range range = {0, 0};
+
     struct interm_state *latest_state = NULL;
     int rc = 0;
 
-    if (runtime_res == -1 && itm_states) {
+    if (runtime_res == -1 && itm_states) { //enter to the intermediate state translation. 
 
         range = trans_dafy_wrapper(itm_states, trans_dafny, &latest_state, &sample_time);
         if (range.end == 0 && range.start == 0) {

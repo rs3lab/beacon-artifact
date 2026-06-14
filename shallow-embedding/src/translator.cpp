@@ -5,8 +5,11 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <iostream>
+#include <cstdint>
 
 #include "translator.hpp"
+#include "../../syzkaller/syz-manager/shared-header.hpp" // interm_state, reg_smt_state, stk_spi, ...
 // ============================================================
 // Attach_type and prog_type strings
 // ============================================================
@@ -282,38 +285,63 @@ int insns_to_dafny(const bpf_insn* insns,
                 const bool reg_src = (insn.code & bpf_opcode::SRC_MASK) == bpf_opcode::X;
                 regs.mark(insn.dst_reg);
                 if (reg_src) regs.mark(insn.src_reg);
-
+            
                 const std::string jump_state = fresh_states.next();
-                const std::string join_state = fresh_states.next();
                 const std::string jump_call  = emit_cond_jump_call(insn, current_state);
-
+            
                 trans_dafny << indent(stmt_depth)
                             << "var " << jump_state << " := " << jump_call << ";\n";
+            
+                const int then_idx  = jump_target_idx(insn, insn_idx);
+                const int else_idx  = insn_idx + 1;
+            
+                std::copy(regs.used.begin(), regs.used.end(), used_regs);
+            
+                // ── NEW: if taken branch is outside the range,
+                //         only translate the fall-through path ──────────
+                if (range && then_idx > range->end) {
+                    // The taken branch leaves the verification range.
+                    // Emit an if block with an empty taken body,
+                    // then continue with the fall-through path.
+                    trans_dafny << indent(stmt_depth)
+                                << "var " << fresh_states.next() << " : State;\n";
+                    trans_dafny << indent(header_depth)
+                                << "if " << jump_state << ".jmp_res {\n";
+                    trans_dafny << indent(header_depth) << "} else {\n";
+            
+                    // Push a close-block so the else gets closed later
+                    ResumePoint close_rp;
+                    close_rp.kind = ResumeKind::CloseBlock;
+                    stack.push_back(close_rp);
+            
+                    current_state = jump_state;
+                    insn_idx      = else_idx;
+                    continue;
+                }
+            
+                // ── Original logic for in-range jumps ──────────────────
+                const std::string join_state = fresh_states.next();
+                const int merge_target = find_merge_target(insns, insn_cnt, else_idx, then_idx);
+            
                 trans_dafny << indent(stmt_depth)
                             << "var " << join_state << " : State;\n";
                 trans_dafny << indent(header_depth)
                             << "if " << jump_state << ".jmp_res {\n";
-
-                std::copy(regs.used.begin(), regs.used.end(), used_regs);
-
-                const int then_idx  = jump_target_idx(insn, insn_idx);
-                const int else_idx  = insn_idx + 1;
-                const int merge_target = find_merge_target(insns, insn_cnt, else_idx, then_idx);
-
+            
                 ResumePoint merge_rp;
                 merge_rp.kind            = ResumeKind::MergeContinue;
                 merge_rp.target_idx      = merge_target;
                 merge_rp.state_name      = jump_state;
                 merge_rp.join_state_name = join_state;
-
+            
                 ResumePoint else_rp;
                 else_rp.kind       = ResumeKind::ElseBranch;
                 else_rp.target_idx = else_idx;
                 else_rp.state_name = jump_state;
-
+            
                 stack.push_back(merge_rp);
                 stack.push_back(else_rp);
-
+            
                 current_state = jump_state;
                 insn_idx      = then_idx;
                 continue;
@@ -520,4 +548,373 @@ std::string build_dafny_string(const bpf_insn* insns,
     trans << "} // module Embedded_" << method_name << "\n";
 
     return trans.str();
+}
+
+
+//=============================================================
+// THE MAIN FUNCTION and It's Helpers  for the intermediate state
+//=============================================================
+
+
+/* ================================================================
+ *  bpf_type_to_MemRegion
+ *
+ *  Maps BPF kernel pointer base types to the corresponding Dafny
+ *  MemRegion variant name (defined in types.dfy).
+ * ================================================================ */
+static std::string bpf_type_to_MemRegion(uint64_t bpftype) {
+
+    switch (bpftype & BPF_BASE_TYPE_MASK) {
+
+        case PTR_TO_STACK:          return "PTR_TO_STACK";
+        case PTR_TO_CTX:            return "PTR_TO_CTX";
+
+        case CONST_PTR_TO_MAP:      return "PTR_TO_MAP_META";
+        case PTR_TO_MAP_VALUE:      return "PTR_TO_MAP_VALUE";
+        case PTR_TO_MAP_KEY:        return "PTR_TO_MAP_KEY";
+
+        case PTR_TO_PACKET_META:    return "PTR_TO_PACKET_META";
+        case PTR_TO_PACKET:         return "PTR_TO_PACKET_DATA";   // renamed in new spec
+        case PTR_TO_PACKET_END:     return "PTR_TO_PACKET_END";
+        case PTR_TO_FLOW_KEYS:      return "PTR_TO_FLOW_KEYS";
+
+        case PTR_TO_SOCKET:         return "PTR_TO_SOCKET";
+        case PTR_TO_SOCK_COMMON:    return "PTR_TO_SOCK_COMMON";
+        case PTR_TO_TCP_SOCK:       return "PTR_TO_TCP_SOCK";
+        case PTR_TO_XDP_SOCK:       return "PTR_TO_XDP_SOCK";
+        case PTR_TO_TP_BUFFER:      return "PTR_TO_TP_BUFFER";
+
+        case PTR_TO_MEM:            return "PTR_TO_MEM";
+        case PTR_TO_BUF:            return "PTR_TO_BUF";
+        //case PTR_TO_BTF:            return "PTR_TO_BTF";
+
+        default:
+            std::cerr << "bpf_type_to_MemRegion: unexpected type "
+                      << bpftype << std::endl;
+            return "";
+    }
+}
+
+/* ================================================================
+ *  emit_arith_var
+ *
+ *  For register/spill index N, emits:
+ *      var <prefix>N : bv64 :| true;
+ *      assume {:axiom} (!mask) & <prefix>N == value;
+ *      <prefix>N := <prefix>N + off;
+ * ================================================================ */
+static void emit_arith_var(struct reg_smt_state *rs,
+                           const std::string &var_name,
+                           std::stringstream &out) {
+
+    out << "\tvar " << var_name << " : bv64 :| true;\n";
+
+    out << "\tassume {:axiom} (!"
+        << uint64_t(rs->mask) << ") & " << var_name
+        << " == " << uint64_t(rs->value) << ";\n";
+
+    if (int32_t(rs->off) != 0) {
+        out << "\t" << var_name << " := " << var_name
+            << " + " << int32_t(rs->off) << ";\n";
+    }
+
+}
+
+/* ================================================================
+ *  emit_ptr_offset_var
+ *
+ *  For pointer registers, emits:
+ *      assume {:axiom} memid < |init_s.mems[r2id(REGION)]|;
+ *      var <off_var> := <arith_var> - init_s.mems[r2id(REGION)][memid].base;
+ *
+ *  The assume is needed for regions whose backing memory may not
+ *  exist in init_state (e.g. PTR_TO_MAP_VALUE after a map lookup).
+ * ================================================================ */
+static void emit_ptr_offset_var(const std::string &region,
+                                uint32_t memid,
+                                const std::string &arith_var,
+                                const std::string &off_var,
+                                std::stringstream &out) {
+
+    out << "\tassume {:axiom} "
+        << memid << " < |init_s.mems[r2id(" << region << ")]|;\n";
+
+    out << "\tvar " << off_var << " := " << arith_var
+        << " - init_s.mems[r2id(" << region
+        << ")][" << memid << "].base;\n";
+}
+
+/* ================================================================
+ *  emit_etypev_expr
+ *
+ *  Returns a Dafny expression string that constructs the ETYPEV
+ *  for a register or spilled value whose arithmetic value is in
+ *  `arith_var` and whose pointer offset (if applicable) is in
+ *  `off_var`.
+ *
+ *  - SCALAR_VALUE         -> Scalar(Normal, <arith_var>)
+ *  - PTR without NULLABLE -> PtrType(REGION, memid, <off_var>)
+ *  - PTR with NULLABLE    -> PtrOrNullType(REGION, memid, <off_var>)
+ * ================================================================ */
+static std::string emit_etypev_expr(struct reg_smt_state *rs,
+                                    const std::string &arith_var,
+                                    const std::string &off_var) {
+
+    uint64_t base_type = rs->type & BPF_BASE_TYPE_MASK;
+
+    if (base_type == SCALAR_VALUE) {
+        return "Scalar(Normal, " + arith_var + ")";
+    }
+
+    std::string region = bpf_type_to_MemRegion(base_type);
+    uint32_t memid     = uint32_t(rs->id);
+
+    std::string ctor = (rs->type & PTR_MAYBE_NULL)
+                        ? "PtrOrNullType" : "PtrType";
+
+    return ctor + "(" + region + ", "
+           + std::to_string(memid) + ", " + off_var + ")";
+}
+
+
+/* ================================================================
+ *  itm_state_2_dafny_new
+ *
+ *  Main entry — emits Dafny code that reconstructs verifier state
+ *  at an intermediate checkpoint.  The code modifies `init_s`
+ *  (the variable produced by `var init_s := init_state(cfg, rand);`
+ *  in the generated method header).
+ *
+ *  Three phases:
+ *      1. Registers R0–R10:  nondeterministic values + functional update
+ *      2. Stack spills:      init_spill_to_stack / init_set_stack_byte
+ *      3. (spin_lock: not in new State — omitted)
+ * ================================================================ */
+void itm_state_2_dafny_new(struct interm_state *itm_state,
+                            std::stringstream  &trans_dafny,
+                            bool               *used_regs) {
+
+    struct reg_smt_state *reg_states = itm_state->reg_states;
+    bool used_reg_with_stack_ptr = false;
+
+    /* ============================================================
+     *  Phase 1-a: emit nondeterministic arith variables per register
+     * ============================================================ */
+    for (int i = 0; i < 11; i++) {
+        if (!used_regs[i]) continue;
+
+        uint64_t base_type = reg_states[i].type & BPF_BASE_TYPE_MASK;
+        if (base_type == NOT_INIT) continue;
+        if (base_type == PTR_TO_STACK) used_reg_with_stack_ptr = true;
+
+        std::string arith_var = "arith_r" + std::to_string(i);
+        emit_arith_var(&reg_states[i], arith_var, trans_dafny);
+    }
+
+    /* ============================================================
+     *  Phase 1-b: for pointer registers, compute logical offset
+     *             off = arith - base
+     * ============================================================ */
+    for (int i = 0; i < 11; i++) {
+        if (!used_regs[i]) continue;
+
+        uint64_t base_type = reg_states[i].type & BPF_BASE_TYPE_MASK;
+        if (base_type == NOT_INIT || base_type == SCALAR_VALUE) continue;
+
+        std::string region   = bpf_type_to_MemRegion(base_type);
+        uint32_t    memid    = uint32_t(reg_states[i].id);
+        std::string arith_var = "arith_r" + std::to_string(i);
+        std::string off_var   = "off_r"   + std::to_string(i);
+
+        emit_ptr_offset_var(region, memid, arith_var, off_var, trans_dafny);
+    }
+
+    /* ============================================================
+     *  Phase 1-c: single functional state update for all registers
+     *
+     *  init_s := init_s.(
+     *      R1 := PtrType(PTR_TO_CTX, 0, off_r1),
+     *      R3 := Scalar(Normal, arith_r3),
+     *      ...
+     *  );
+     * ============================================================ */
+    trans_dafny << "\tinit_s := init_s.(";
+    bool first = true;
+
+    for (int i = 0; i < 11; i++) {
+        if (!used_regs[i]) continue;
+
+        if (!first) trans_dafny << ",";
+        first = false;
+
+        trans_dafny << "\n\t\tR" << i << " := ";
+
+        uint64_t base_type = reg_states[i].type & BPF_BASE_TYPE_MASK;
+
+        if (base_type == NOT_INIT) {
+            trans_dafny << "Uninit";
+        } else {
+            std::string arith_var = "arith_r" + std::to_string(i);
+            std::string off_var   = "off_r"   + std::to_string(i);
+            trans_dafny << emit_etypev_expr(&reg_states[i], arith_var, off_var);
+        }
+    }
+    trans_dafny << "\n\t);\n\n";
+
+    /* ============================================================
+     *  Phase 2: stack initialisation
+     * ============================================================ */
+    if (!used_reg_with_stack_ptr) return;
+
+    uint64_t stackNo = reg_states[10].id;    // number of stacks - 1
+
+    for (uint64_t stackIdx = 0; stackIdx <= stackNo; stackIdx++) {
+
+        struct stk_spi *stk_spis = itm_state->stk_spis[stackIdx];
+        int num_spis = itm_state->alloc_slots[stackIdx] / BPF_REG_SIZE;
+
+        trans_dafny << "\t// ---- stack " << stackIdx
+                    << " : " << itm_state->alloc_slots[stackIdx]
+                    << " bytes ----\n";
+
+        for (int i = 0; i < num_spis; i++) {
+
+            struct stk_spi *cur_spi = stk_spis + i;
+            int base_slot = (63 - i) * BPF_REG_SIZE;
+
+            /* --------------------------------------------------
+             *  Case A: full 64-bit register spill (is_spilled==1)
+             * -------------------------------------------------- */
+            if (cur_spi->is_spilled == 1) {
+
+                std::string val_name = "stk_v" + std::to_string(stackIdx)
+                                     + "_"    + std::to_string(i);
+                emit_arith_var(&cur_spi->spilled_reg, val_name, trans_dafny);
+
+                uint64_t spi_base = cur_spi->spilled_reg.type & BPF_BASE_TYPE_MASK;
+
+                /* Build the ETYPEV expression for the spilled register */
+                std::string tv_expr;
+                if (spi_base == SCALAR_VALUE) {
+                    tv_expr = "Scalar(Normal, " + val_name + ")";
+                } else {
+                    std::string region = bpf_type_to_MemRegion(spi_base);
+                    uint32_t    memid  = uint32_t(cur_spi->spilled_reg.id);
+
+                    std::string off_name = "soff_" + std::to_string(stackIdx)
+                                         + "_"    + std::to_string(i);
+                    emit_ptr_offset_var(region, memid, val_name, off_name, trans_dafny);
+
+                    std::string ctor = (cur_spi->spilled_reg.type & PTR_MAYBE_NULL)
+                                       ? "PtrOrNullType" : "PtrType";
+                    tv_expr = ctor + "(" + region + ", "
+                            + std::to_string(memid) + ", " + off_name + ")";
+                }
+
+                /* Spill all 8 bytes at once */
+                trans_dafny << "\tinit_s := init_spill_to_stack(init_s, "
+                            << stackIdx << ", " << base_slot
+                            << ", " << tv_expr << ");\n";
+
+            /* --------------------------------------------------
+             *  Case B: per-byte handling  (is_spilled==0 or 2)
+             * -------------------------------------------------- */
+            } else {
+
+                /* If is_spilled==2, create value & ETYPEV for the
+                 * partial spill; bytes tagged STACK_SPILL will
+                 * reference this.                                    */
+                std::string spill_tv_expr;   // Dafny expression for full ETYPEV
+
+                if (cur_spi->is_spilled == 2) {
+
+                    std::string val_name = "stk_p" + std::to_string(stackIdx)
+                                         + "_"    + std::to_string(i);
+                    emit_arith_var(&cur_spi->spilled_reg, val_name, trans_dafny);
+
+                    uint64_t spi_base = cur_spi->spilled_reg.type & BPF_BASE_TYPE_MASK;
+
+                    if (spi_base == SCALAR_VALUE) {
+                        spill_tv_expr = "Scalar(Normal, " + val_name + ")";
+                    } else {
+                        std::string region = bpf_type_to_MemRegion(spi_base);
+                        uint32_t    memid  = uint32_t(cur_spi->spilled_reg.id);
+
+                        std::string off_name = "spoff_" + std::to_string(stackIdx)
+                                             + "_"     + std::to_string(i);
+                        emit_ptr_offset_var(region, memid, val_name, off_name, trans_dafny);
+
+                        std::string ctor = (cur_spi->spilled_reg.type & PTR_MAYBE_NULL)
+                                           ? "PtrOrNullType" : "PtrType";
+                        spill_tv_expr = ctor + "(" + region + ", "
+                                      + std::to_string(memid) + ", " + off_name + ")";
+                    }
+                }
+
+                /* One nondeterministic bv64 per SPI for any MISC bytes.
+                 * Individual bytes are extracted with get_nth_byte.      */
+                bool has_misc = false;
+                for (int j = 0; j < BPF_REG_SIZE; j++) {
+                    if (cur_spi->slots.type[BPF_REG_SIZE - j - 1] == STACK_MISC) {
+                        has_misc = true;
+                        break;
+                    }
+                }
+                std::string misc_var;
+                if (has_misc) {
+                    misc_var = "misc_" + std::to_string(stackIdx)
+                             + "_"    + std::to_string(i);
+                    trans_dafny << "\tvar " << misc_var << " : bv64 :| true;\n";
+                }
+
+                /* Iterate over 8 bytes in this SPI */
+                for (int j = 0; j < BPF_REG_SIZE; j++) {
+
+                    int      slot_pos = base_slot + j;
+                    uint64_t cur_type = cur_spi->slots.type[BPF_REG_SIZE - j - 1];
+
+                    switch (cur_type) {
+
+                    case STACK_SPILL:
+                        /* Byte j of the decomposed spilled register.
+                         * init_spill_bytes(tv)[j] gives the correct
+                         * byte-level ETYPEV.                          */
+                        trans_dafny
+                            << "\tinit_s := init_set_stack_byte(init_s, "
+                            << stackIdx << ", " << slot_pos
+                            << ", init_spill_bytes(" << spill_tv_expr
+                            << ")[" << j << "]);\n";
+                        break;
+
+                    case STACK_ZERO:
+                        trans_dafny
+                            << "\tinit_s := init_set_stack_byte(init_s, "
+                            << stackIdx << ", " << slot_pos
+                            << ", Scalar(Normal, 0));\n";
+                        break;
+
+                    case STACK_MISC:
+                        /* Scalar with unknown value — use a byte of the
+                         * nondeterministic misc variable.               */
+                        trans_dafny
+                            << "\tinit_s := init_set_stack_byte(init_s, "
+                            << stackIdx << ", " << slot_pos
+                            << ", Scalar(Normal, get_nth_byte("
+                            << misc_var << ", " << j << ")));\n";
+                        break;
+
+                    case STACK_INVALID:
+                        /* Leave as Uninit (default from init_state). */
+                        break;
+
+                    default:
+                        std::cerr << "itm_state_2_dafny_new: "
+                                  << "unexpected stack slot type "
+                                  << cur_type << std::endl;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }

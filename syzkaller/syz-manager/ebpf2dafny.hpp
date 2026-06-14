@@ -8,10 +8,6 @@
 #define BPF_BASE_TYPE_MASK 0xff
 #define PTR_MAYBE_NULL 0x100
 
-struct verify_range {
-    int start;
-    int end;
-};
 
 std::string op2dafnyop[] = {
 	"Add",
